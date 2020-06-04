@@ -5,17 +5,18 @@ application = Flask(__name__)
 
 
 @application.route("/")
-def index():
+def starting():
+    # TODO: add an overview of available APIs
     return "This is the backend of sumz!"
 
 
 @application.route("/echo/<string:message>")
-def index(message):
+def test(message):
     return f"This is your echo\n {message}"
 
 
 @application.route("/getCashFlows/<company>")
-def index(company):
+def companyCashFlows(company):
     if "adidas".__eq__(company.casefold()):
         response = jsonify(
             company=company,
