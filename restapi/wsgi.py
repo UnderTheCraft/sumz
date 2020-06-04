@@ -1,13 +1,18 @@
-from flask import Flask, jsonify, make_response
+from flask import Flask, jsonify, make_response, render_template
 from flask_api import status
 
-application = Flask(__name__)
+
+def appFactory():
+    app = Flask(__name__)
+    return app
+
+application = appFactory()
 
 
 @application.route("/")
 def starting():
     # TODO: add an overview of available APIs
-    return "This is the backend of sumz!"
+    return render_template('index.html')
 
 
 @application.route("/echo/<string:message>")
@@ -21,7 +26,7 @@ def companyCashFlows(company):
         response = jsonify(
             company=company,
             startingDate="01.01.2008",
-            freeCashFlows=[22,55,64,97,87,155,99,124,136]
+            freeCashFlows=[22, 55, 64, 97, 87, 155, 99, 124, 136]
         )
     elif "allianz".__eq__(company.casefold()):
         response = jsonify(
