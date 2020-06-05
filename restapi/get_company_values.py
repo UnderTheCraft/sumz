@@ -1,7 +1,7 @@
 import pandas as pd
 
 # get cash flows of companies
-def get_company_cash_flows(company: str):
+def get_cash_flows(company: str):
 
     base_dir = "data/fcf"
 
