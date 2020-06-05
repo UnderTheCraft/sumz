@@ -7,7 +7,7 @@ def get_cash_flows(company: str):
 
     # Get from local files
     try:
-        df = pd.read_csv(f"{base_dir}/{company}.csv")
+        df = pd.read_csv(f"{base_dir}/{company.casefold()}.csv")
         return df.to_json(orient='records')
     except FileNotFoundError:
         print("company not found locally")
@@ -15,7 +15,7 @@ def get_cash_flows(company: str):
     # Get from an API
     try:
       # TODO request api or
-      return []
+      print("todo")
     except Exception:
         print("company not available within API")
 
