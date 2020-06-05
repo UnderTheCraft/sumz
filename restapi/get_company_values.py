@@ -7,7 +7,7 @@ def get_cash_flows(company: str):
 
     # Get from local files
     try:
-        df = pd.read_csv(f"{base_dir}/{company}")
+        df = pd.read_csv(f"{base_dir}/{company}.csv")
         return df.to_json(orient='records')
     except FileNotFoundError:
         print("company not found locally")
