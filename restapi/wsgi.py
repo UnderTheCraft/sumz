@@ -1,9 +1,11 @@
 from flask import Flask, jsonify, make_response, render_template
+from flask_cors import CORS
 from flask_api import status
 
 
 def appFactory():
     app = Flask(__name__)
+    CORS(app)
     return app
 
 application = appFactory()
