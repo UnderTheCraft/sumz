@@ -3,7 +3,7 @@ import pandas as pd
 # get cash flows of companies
 def get_cash_flows(company: str):
 
-    base_dir = "data/fcf"
+    base_dir = "/data/fcf"
 
     # Get from local files
     try:
