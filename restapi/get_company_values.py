@@ -3,7 +3,7 @@ import pandas as pd
 # get cash flows of companies
 def get_cash_flows(company: str):
 
-    base_dir = "https://cloud-cube-eu.s3.amazonaws.com/mm6r5v7viahe/public/"
+    base_dir = "https://cloud-cube-eu.s3.amazonaws.com/mm6r5v7viahe/public"
 
     # Get from local files
     try:
