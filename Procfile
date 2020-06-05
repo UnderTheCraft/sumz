@@ -1,1 +1,1 @@
-web: gunicorn restapi.wsgi --log-file -
+web: gunicorn restapi.main --log-file -

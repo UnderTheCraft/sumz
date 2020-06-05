@@ -1,4 +1,7 @@
+gunicorn
 flask
 flask-cors
 flask_api
-gunicorn
+pandas
+numpy
+statsmodels
