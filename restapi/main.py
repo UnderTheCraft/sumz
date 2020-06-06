@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, make_response, render_template
+from flask import Flask, jsonify, make_response, render_template, Response
 from flask_cors import CORS
 from flask_api import status
 
@@ -29,14 +29,12 @@ def companyCashFlows(company: str):
 
     try:
         company_cash_flows = get_company_values.get_cash_flows(company)
-        company_cash_flows.append({"company":company.casefold()})
+        company_cash_flows.append({"company": company.casefold()})
 
-        response = make_response(company_cash_flows, status.HTTP_200_OK)
-        response.headers['content-type'] = 'application/json'
-        return response
+        return Response(company_cash_flows, status=status.HTTP_200_OK, headers={'content-type': 'application/json'})
 
-    except NotImplementedError:
-        return make_response(jsonify(), status.HTTP_404_NOT_FOUND)
+    except NotImplementedError as e:
+        return make_response(f"Das Unternehmen {company} ist nicht verfügbar {str(e)}", status.HTTP_404_NOT_FOUND)
 
 
 @application.route("/getCashFlowForecast/<company>&prediction_length=<prediction_length>")

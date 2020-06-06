@@ -6,7 +6,7 @@ from dateutil.parser import parse
 # get cash flows of companies
 def get_cash_flows(company: str):
 
-    #base_dir = "https://cloud-cube-eu.s3.amazonaws.com/mm6r5v7viahe/public"
+    base_dir = "https://cloud-cube-eu.s3.amazonaws.com/mm6r5v7viahe/public"
 
     # Get from local files
 
@@ -39,7 +39,7 @@ def get_cash_flows(company: str):
     except Exception:
         print("company not available within API")
 
-    raise NotImplementedError("company not available locally and within API")
+    raise NotImplementedError(f"Company {company} not available locally and within API")
 
 # get beta factor
 
