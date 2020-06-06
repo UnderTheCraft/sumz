@@ -26,14 +26,19 @@ def test(message):
 @application.route("/getCashFlows/<company>")
 def companyCashFlows(company: str):
     from . import get_company_values
+    import json
 
     try:
         company_cash_flows = get_company_values.get_cash_flows(company)
         company_cash_flows.append({"company": company.casefold()})
+        print("added company to json")
 
-        cf_response = Response(company_cash_flows)
-        response = make_response(cf_response, status.HTTP_200_OK)
+        #cf_response = Response(json.dump(company_cash_flows))
+        #print("created cf_response object")
+
+        response = make_response(jsonify(company_cash_flows), status.HTTP_200_OK)
         response.headers['content-type'] = 'application/json'
+        print("returning response object")
         return response
 
     except NotImplementedError as e:

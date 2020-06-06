@@ -16,6 +16,7 @@ def get_cash_flows(company: str):
         df = pd.read_csv(path)
         print("DataFrame successfully read from S3 bucket -> Return values")
         return json.loads(df.to_json(orient='records'))
+        #return df.to_json(orient='records')
     except FileNotFoundError as e:
         print("company not found locally")
         #print(e)
