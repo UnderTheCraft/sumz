@@ -32,9 +32,9 @@ def get_cash_flows(company: str):
             parsedDate = parse(rawDates[i].text)
             parsedFCF = int(float(rawFCFs[i].text[:-1]) * 10 ** abbrevationToNumber[rawFCFs[i].text[-1]])
 
-            FCFs.append([parsedDate, parsedFCF]).to_json(orient='records')
+            FCFs.append([parsedDate, parsedFCF])
 
-        return pd.DataFrame(FCFs[0:16], columns=['Date', 'FCF'])
+        return pd.DataFrame(FCFs[0:16], columns=['Date', 'FCF']).to_json(orient='records')
     except Exception:
         print("company not available within API")
 
