@@ -38,6 +38,11 @@ def companyCashFlows(company: str):
 
     except NotImplementedError as e:
         return make_response(f"Das Unternehmen {company} ist nicht verfügbar {str(e)}", status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        print("Es ist ein schwerwiegender Fehler aufgetreten")
+        print(e)
+
+    return make_response(f"Die Anfrage für das Unternehmen {company} konnte nicht bearbeitet werden!")
 
 
 @application.route("/getCashFlowForecast/<company>&prediction_length=<prediction_length>")
