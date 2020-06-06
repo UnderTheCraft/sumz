@@ -6,7 +6,7 @@ from dateutil.parser import parse
 # get cash flows of companies
 def get_cash_flows(company: str):
 
-    #base_dir = "https://cloud-cube-eu.s3.amazonaws.com/mm6r5v7viahe/public"
+    base_dir = "https://cloud-cube-eu.s3.amazonaws.com/mm6r5v7viahe/public"
 
     # Get from local files
 
@@ -30,7 +30,7 @@ def get_cash_flows(company: str):
         FCFs = []
 
         for i in range(1, len(rawDates)):
-            parsedDate = parse(rawDates[i].text)
+            parsedDate = rawDates[i].text
             parsedFCF = int(float(rawFCFs[i].text[:-1]) * 10 ** abbrevationToNumber[rawFCFs[i].text[-1]])
 
             FCFs.append([parsedDate, parsedFCF])
