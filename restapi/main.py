@@ -31,7 +31,10 @@ def companyCashFlows(company: str):
         company_cash_flows = get_company_values.get_cash_flows(company)
         company_cash_flows.append({"company": company.casefold()})
 
-        return Response(company_cash_flows, status=status.HTTP_200_OK, headers={'content-type': 'application/json'})
+        cf_response = Response(company_cash_flows)
+        response = make_response(cf_response, status.HTTP_200_OK)
+        response.headers['content-type'] = 'application/json'
+        return response
 
     except NotImplementedError as e:
         return make_response(f"Das Unternehmen {company} ist nicht verfügbar {str(e)}", status.HTTP_404_NOT_FOUND)
