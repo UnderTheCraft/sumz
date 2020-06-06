@@ -6,3 +6,4 @@ pandas
 numpy
 statsmodels
 requests-html
+requests_html
