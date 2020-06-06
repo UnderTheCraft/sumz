@@ -1,4 +1,5 @@
 import pandas as pd
+import json
 
 # get cash flows of companies
 def get_cash_flows(company: str):
@@ -10,7 +11,7 @@ def get_cash_flows(company: str):
         path = f"{base_dir}/{company.casefold()}.csv"
         print(path)
         df = pd.read_csv(path)
-        return df.to_json(orient='records')
+        return json.loads(df.to_json(orient='records'))
     except FileNotFoundError as e:
         print(e)
         print("company not found locally")
