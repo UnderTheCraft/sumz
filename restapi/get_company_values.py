@@ -39,7 +39,7 @@ def get_cash_flows(company: str):
     except Exception:
         print("company not available within API")
 
-    raise NotImplementedError("company not available locally and within API")
+    raise NotImplementedError(f"Company {company} not available locally and within API")
 
 # get beta factor
 
