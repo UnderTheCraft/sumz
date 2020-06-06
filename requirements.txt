@@ -6,5 +6,6 @@ flask_api
 pandas
 numpy
 statsmodels
+json
 requests-html
 requests_html

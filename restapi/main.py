@@ -29,11 +29,11 @@ def companyCashFlows(company: str):
 
     try:
         company_cash_flows = get_company_values.get_cash_flows(company)
-        response = jsonify(
-            company=company,
-            cashflows=company_cash_flows
-        )
-        return make_response(response, status.HTTP_200_OK)
+        company_cash_flows.append({"company":company.casefold()})
+
+        response = make_response(company_cash_flows, status.HTTP_200_OK)
+        response.headers['content-type'] = 'application/json'
+        return response
 
     except NotImplementedError:
         return make_response(jsonify(), status.HTTP_404_NOT_FOUND)
