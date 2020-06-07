@@ -29,11 +29,12 @@ def get_from_local(company: str):
 
     try:
         path = f"{base_dir}/{company.casefold()}.csv"
-        #print(path)
         result_df = pd.read_csv(path)
-        #print("DataFrame successfully read from S3 bucket -> Return values")
-        return json.loads(result_df.to_json(orient='records'))
-        #return df.to_json(orient='records')
+        #result_json = json.loads(result_df.to_json(orient='records'))
+        result_json = result_df.to_dict(orient='records')
+        result_json.append({"currency": "EUR"})
+        return result_json
+
     except FileNotFoundError as e:
         print("company not found locally")
         traceback.print_exc()
@@ -45,13 +46,16 @@ def get_from_api(company: str):
         abbrevationToNumber = {'K': 3, 'M': 6, 'B': 9, 'T': 12}
         session = HTMLSession()
 
-        # TODO hier sollte vielleicht ne try hin, falls keine Verbindung aufgebaut werden kann
+        # TODO hier könnte ne tryExcept hin, falls z.b. keine Verbindung aufgebaut werden kann
         response = session.get('https://ycharts.com/companies/' + company + '/free_cash_flow')
 
         print(f"The headers of the requests are:\n{response.headers}")
 
         rawDates = response.html.find(".histDataTable", first=True).find(".col1")
         rawFCFs = response.html.find(".histDataTable", first=True).find(".col2")
+
+        # TODO Get Currency from Website
+        # currency = response.html.find(".histDataTable", first=True).find(".col2")
 
         FCFs = []
 
@@ -62,7 +66,10 @@ def get_from_api(company: str):
             FCFs.append([parsedDate, parsedFCF])
 
         result_df = pd.DataFrame(FCFs[0:16], columns=['Date', 'FCF'])
-        return json.loads(result_df.to_json(orient='records'))
+        result_json = json.loads(result_df.to_json(orient='records'))
+        # TODO Put variable currency from website here
+        result_json.append({"currency": "USD"})
+        return result_json
 
     except Exception as e:
         print(f"company not available within API!")
