@@ -2,14 +2,13 @@ from requests_html import HTMLSession
 import pandas as pd
 import json
 import traceback
-
 from dateutil.parser import parse
 
 # get cash flows of companies
 def get_cash_flows(company: str):
 
     local_companies = ["sap"]
-    api_companies = ["AAPL", "MSFT"]
+    api_companies = ["AAPL", "MSFT", "JNJ", "WMT", "V", "JPM", "PG", "UNH", "HD", "INTC", "VZ", "DIS", "MRK", "XOM", "KO", "PFE", "CSCO", "CVX", "MCD", "NKE", "IBM", "BA", "MMM", "AXP", "GS", "CAT", "WBA", "DOW", "TRV"]
 
     if company.casefold() in local_companies:
         return get_from_local(company)
@@ -56,7 +55,8 @@ def get_from_api(company: str):
         rawFCFs = response.html.find(".histDataTable", first=True).find(".col2")
 
         # TODO Get Currency from Website
-        # currency = response.html.find(".histDataTable", first=True).find(".col2")
+        currency = response.html.find("#securityQuote").find(".info")
+        print(currency)
 
         FCFs = []
 
