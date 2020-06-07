@@ -51,10 +51,7 @@ def get_from_api(company: str):
 
         rawDates = response.html.find(".histDataTable", first=True).find(".col1")
         rawFCFs = response.html.find(".histDataTable", first=True).find(".col2")
-
-        # TODO Get Currency from Website
-        currency = response.html.find("#securityQuote").find(".info")
-        print(currency)
+        currency = response.html.find("#securityQuote", first=True).find(".info")[1].text
 
         FCFs = []
 
@@ -65,9 +62,8 @@ def get_from_api(company: str):
             FCFs.append([parsedDate, parsedFCF])
 
         result_df = pd.DataFrame(FCFs[0:16], columns=['Date', 'FCF'])
-        result_json = json.loads(result_df.to_json(orient='records'))
-        # TODO Put variable currency from website here
-        result_json.append({"currency": "USD"})
+        result_json = result_df.to_dict(orient='records')
+        result_json.append({"currency": currency})
         return result_json
 
     except Exception as e:
