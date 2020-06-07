@@ -29,7 +29,7 @@ def get_from_local(company: str):
 
     try:
         path = f"{base_dir}/{company.casefold()}.csv"
-        result_df = pd.read_csv(path)
+        result_df = pd.read_csv(path, sep=";")
         #result_json = json.loads(result_df.to_json(orient='records'))
         result_json = result_df.to_dict(orient='records')
         result_json.append({"currency": "EUR"})
