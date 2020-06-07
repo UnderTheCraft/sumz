@@ -32,7 +32,6 @@ def companyCashFlows(company: str):
         company_cash_flows = get_company_values.get_cash_flows(company)
         company_cash_flows.append({"company": company.casefold()})
 
-        print(company_cash_flows)
         #cf_response = Response(json.dump(company_cash_flows))
         #print("created cf_response object")
 
