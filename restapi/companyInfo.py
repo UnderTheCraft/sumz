@@ -4,8 +4,8 @@ class CompanyInfo:
         self.__api_companies_short = ["AAPL", "MSFT", "JNJ", "WMT", "V", "JPM", "PG", "UNH", "HD", "INTC", "VZ", "DIS",
                                       "MRK", "XOM",
                                       "KO", "PFE", "CSCO", "CVX", "MCD", "NKE", "IBM", "BA", "MMM", "AXP", "GS", "CAT",
-                                      "WBA", "DOW",
-                                      "TRV"]
+                                      "WBA"
+                                      "TRV"]#,"DOW","UTX"]
         self.__all_companies_short = self.__local_companies_short + self.__api_companies_short
 
         self.__local_companies_long = ["SAP"]
@@ -16,8 +16,8 @@ class CompanyInfo:
                                      "Coca-Cola", "Pfizer", "Cisco Systems", "Chevron", "McDonalds", "Nike",
                                      "International Business Machines", "Boeing", "3M", "American Express",
                                      "Goldman Sachs", "Caterpillar",
-                                     "Wallgreens Boots Alliance", "Dow Inc",
-                                     "The Travellers Companies"]
+                                     "Wallgreens Boots Alliance",
+                                     "The Travellers Companies"]#"Dow Inc","United Technologies Corporation"]
         self.__all_companies_long = self.__local_companies_long + self.__api_companies_long
 
         # TODO Combine all_companies_short with all_companies_long in dictionary
