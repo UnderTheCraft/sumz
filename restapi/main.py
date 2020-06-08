@@ -62,4 +62,9 @@ class CashFlows(Resource):
 @application.route("/getCashFlowForecast/<string:company>&prediction_length=<int:prediction_length>")
 class CashFlowForecast(Resource):
     def get(self, company, prediction_length):
-        return make_response(f"Company {company} and prediction length {prediction_length}", status.HTTP_200_OK)
+        response = []
+        response.add({"compnay":company,"prediction_length":prediction_length})
+        response = make_response(jsonify(response),status.HTTP_200_OK)
+        response.headers['content-type'] = 'application/json'
+
+        return response
