@@ -1,21 +1,24 @@
 from flask import Flask, jsonify, make_response, render_template, Response
 from flask_cors import CORS
 from flask_api import status
-from flask_restx.api import Api, Resource
+from flask_restx import Api, Resource
 
 from restapi.companyInfo import CompanyInfo
 from restapi.companyValues import CompanyValues
 
 flask_app = Flask(__name__)
+print("Flask App created")
 #CORS(flask_app)
 # application = Api(app=flask_app,
 #                   title="SUMZ",
 #                   description="Das Backend der SUMZ Anwendung für Unternehmensbewertung")
-application = Api(flask_app)
+application = Api()
+application.init_app(flask_app)
+print("RestX App Initialized")
 
 # namespace = application.namespace('api', description='Main APIs')
 companyInfo = CompanyInfo()
-companyValues = CompanyValues()
+#companyValues = CompanyValues()
 
 
 # @application.route("/", methods=['GET'])
