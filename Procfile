@@ -1,1 +1,1 @@
-web: gunicorn restapi.main:application --log-file -
+web: gunicorn --log-file - restapi.main:api
