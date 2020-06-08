@@ -45,7 +45,7 @@ class CompanyValues:
     def get_from_api(self, company: str):
         print("get from API")
 
-        dates,fcfs,currency = self.get_cash_flows_array()
+        dates, fcfs, currency = self.get_cash_flows_array(company)
 
         result_df = pd.DataFrame()
         result_df["date"] = dates
@@ -56,29 +56,29 @@ class CompanyValues:
         return result_json
 
 
-        def get_cash_flows_array(company):
+    def get_cash_flows_array(self, company):
 
-            try:
-                abbrevationToNumber = {'K': 3, 'M': 6, 'B': 9, 'T': 12}
-                session = HTMLSession()
+        try:
+            abbrevationToNumber = {'K': 3, 'M': 6, 'B': 9, 'T': 12}
+            session = HTMLSession()
 
-                # TODO hier könnte ne tryExcept hin, falls z.b. keine Verbindung aufgebaut werden kann
-                response = session.get('https://ycharts.com/companies/' + company + '/free_cash_flow')
+            # TODO hier könnte ne tryExcept hin, falls z.b. keine Verbindung aufgebaut werden kann
+            response = session.get('https://ycharts.com/companies/' + company + '/free_cash_flow')
 
-                print(f"The headers of the requests are:\n{response.headers}")
+            print(f"The headers of the requests are:\n{response.headers}")
 
-                rawDates = response.html.find(".histDataTable", first=True).find(".col1")
-                rawFCFs = response.html.find(".histDataTable", first=True).find(".col2")
-                currency = response.html.find("#securityQuote", first=True).find(".info")[1].text
+            raw_dates = response.html.find(".histDataTable", first=True).find(".col1")[1:]
+            raw_fcfs = response.html.find(".histDataTable", first=True).find(".col2")[1:]
+            currency = response.html.find("#securityQuote", first=True).find(".info")[1].text
 
-                dates = [parser.parse(rawDate.text) for rawDate in rawDates]
-                fcfs = [int(float(rawFCF.text[:-1]) * 10 ** abbrevationToNumber[rawFCF.text[-1]]) for rawFCF in rawFCFs]
+            dates = [parser.parse(rawDate.text) for rawDate in raw_dates]
+            fcfs = [int(float(rawFCF.text[:-1]) * 10 ** abbrevationToNumber[rawFCF.text[-1]]) for rawFCF in raw_fcfs]
 
-                return dates,fcfs,currency
+            return dates,fcfs,currency
 
-            except Exception as e:
-                print(f"company not available within API!")
-                traceback.print_exc()
+        except Exception as e:
+            print(f"company not available within API!")
+            traceback.print_exc()
 
     # ---------------------------------------------------------------------------------------------------------------------
 
