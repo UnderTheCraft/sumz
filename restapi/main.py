@@ -38,7 +38,7 @@ class Methods(Resource):
 class CashFlows(Resource):
     def get(self, company):
         try:
-            company_cash_flows = companyValues.get_cash_flows(company)
+            company_cash_flows = companyValues.get_cash_flows_json(company)
             company_cash_flows.append({"company": company.casefold()})
 
             # cf_response = Response(json.dump(company_cash_flows))
@@ -57,7 +57,6 @@ class CashFlows(Resource):
 
         return make_response(f"Die Anfrage für das Unternehmen {company} konnte nicht bearbeitet werden!")
 
-ar
 @application.route("/getCashFlowForecast/<string:company>&prediction_length=<int:prediction_length>", methods=['GET'])
 class CashFlowForecast(Resource):
     def get(self, company, prediction_length):

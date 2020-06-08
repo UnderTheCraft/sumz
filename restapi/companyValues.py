@@ -10,7 +10,7 @@ class CompanyValues:
         self.__companies = CompanyInfo()
 
     # get cash flows of companies
-    def get_cash_flows(self, company: str):
+    def get_cash_flows_json(self, company: str):
         local_companies = self.__companies.get_local_companies()
         api_companies = self.__companies.get_api_companies()
 
@@ -43,38 +43,42 @@ class CompanyValues:
 
     # Get from an API
     def get_from_api(self, company: str):
-        try:
-            print("get from API")
-            abbrevationToNumber = {'K': 3, 'M': 6, 'B': 9, 'T': 12}
-            session = HTMLSession()
+        print("get from API")
 
-            # TODO hier könnte ne tryExcept hin, falls z.b. keine Verbindung aufgebaut werden kann
-            response = session.get('https://ycharts.com/companies/' + company + '/free_cash_flow')
+        dates,fcfs,currency = self.get_cash_flows_array()
 
-            print(f"The headers of the requests are:\n{response.headers}")
+        result_df = pd.DataFrame()
+        result_df["date"] = dates
+        result_df["FCF"] = fcfs
 
-            rawDates = response.html.find(".histDataTable", first=True).find(".col1")
-            rawFCFs = response.html.find(".histDataTable", first=True).find(".col2")
-            currency = response.html.find("#securityQuote", first=True).find(".info")[1].text
+        result_json = [{"Free Cash Flows": result_df.to_dict(orient='records')}, {"currency": currency}]
 
-            FCFs = []
+        return result_json
 
-            for i in range(1, len(rawDates)):
-                parsedDate = parser.parse(rawDates[i].text)
-                parsedFCF = int(float(rawFCFs[i].text[:-1]) * 10 ** abbrevationToNumber[rawFCFs[i].text[-1]])
 
-                FCFs.append([parsedDate, parsedFCF])
+        def get_cash_flows_array(company):
 
-            result_df = pd.DataFrame(FCFs[0:16], columns=['Date', 'FCF'])
-            # result_json = []
-            # result_json.append({"Free Cash Flows" : result_df.to_dict(orient='records')})
-            # result_json.append({"currency": currency})
-            result_json = [{"Free Cash Flows": result_df.to_dict(orient='records')}, {"currency": currency}]
-            return result_json
+            try:
+                abbrevationToNumber = {'K': 3, 'M': 6, 'B': 9, 'T': 12}
+                session = HTMLSession()
 
-        except Exception as e:
-            print(f"company not available within API!")
-            traceback.print_exc()
+                # TODO hier könnte ne tryExcept hin, falls z.b. keine Verbindung aufgebaut werden kann
+                response = session.get('https://ycharts.com/companies/' + company + '/free_cash_flow')
+
+                print(f"The headers of the requests are:\n{response.headers}")
+
+                rawDates = response.html.find(".histDataTable", first=True).find(".col1")
+                rawFCFs = response.html.find(".histDataTable", first=True).find(".col2")
+                currency = response.html.find("#securityQuote", first=True).find(".info")[1].text
+
+                dates = [parser.parse(rawDate.text) for rawDate in rawDates]
+                fcfs = [int(float(rawFCF.text[:-1]) * 10 ** abbrevationToNumber[rawFCF.text[-1]]) for rawFCF in rawFCFs]
+
+                return dates,fcfs,currency
+
+            except Exception as e:
+                print(f"company not available within API!")
+                traceback.print_exc()
 
     # ---------------------------------------------------------------------------------------------------------------------
 
