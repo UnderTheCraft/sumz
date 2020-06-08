@@ -13,21 +13,21 @@ application = appFactory()
 companyInfo = CompanyInfo()
 companyValues = CompanyValues()
 
-@application.route("/")
+@application.route("/", methods=['GET'])
 def starting():
     # TODO: add an overview of available APIs
     return render_template('index.html')
 
-@application.route("/companies")
+@application.route("/companies", methods=['GET'])
 def get_companies():
     return companyInfo.get_all_companies()
 
-@application.route("/methods")
+@application.route("/methods", methods=['GET'])
 def get_methods():
     return {"methods": {"name": "APV", "description": "Adjusted Present Value"}}
 
 
-@application.route("/getCashFlows/<company>")
+@application.route("/getCashFlows/<company>", methods=['GET'])
 def get_company_cash_flows(company: str):
     try:
         company_cash_flows = companyValues.get_cash_flows(company)
@@ -50,7 +50,7 @@ def get_company_cash_flows(company: str):
     return make_response(f"Die Anfrage für das Unternehmen {company} konnte nicht bearbeitet werden!")
 
 
-@application.route("/getCashFlowForecast/<company>&prediction_length=<prediction_length>")
+@application.route("/getCashFlowForecast/<company>&prediction_length=<prediction_length>", methods=['GET'])
 def get_forecast_cash_flows(company: str, prediction_length: int):
 
     return make_response(f"Company {company} and prediction length {prediction_length}", status.HTTP_200_OK)
