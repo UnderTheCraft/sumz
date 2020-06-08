@@ -4,7 +4,7 @@ import traceback
 from restapi.companyInfo import CompanyInfo
 
 # TODO Import not used!
-from dateutil.parser import parse
+from dateutil import parser
 
 companies = CompanyInfo()
 
@@ -60,7 +60,7 @@ def get_from_api(company: str):
         FCFs = []
 
         for i in range(1, len(rawDates)):
-            parsedDate = rawDates[i].text
+            parsedDate = parser.parse(rawDates[i].text)
             parsedFCF = int(float(rawFCFs[i].text[:-1]) * 10 ** abbrevationToNumber[rawFCFs[i].text[-1]])
 
             FCFs.append([parsedDate, parsedFCF])
