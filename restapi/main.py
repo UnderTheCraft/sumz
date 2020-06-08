@@ -17,19 +17,23 @@ def starting():
     # TODO: add an overview of available APIs
     return render_template('index.html')
 
+@application.route("/companies")
+def get_companies():
+    from . import companyInfo
+    return companyInfo.get_all_companies()
 
-@application.route("/echo/<string:message>")
-def test(message):
-    return f"This is your echo\n {message}"
+@application.route("/methods")
+def get_methods():
+    return {"methods": {"name": "APV", "description": "Adjusted Present Value"}}
 
 
 @application.route("/getCashFlows/<company>")
-def companyCashFlows(company: str):
-    from . import get_company_values
+def get_company_cash_flows(company: str):
+    from . import companyValues
     import json
 
     try:
-        company_cash_flows = get_company_values.get_cash_flows(company)
+        company_cash_flows = companyValues.get_cash_flows(company)
         company_cash_flows.append({"company": company.casefold()})
 
         #cf_response = Response(json.dump(company_cash_flows))
@@ -50,6 +54,6 @@ def companyCashFlows(company: str):
 
 
 @application.route("/getCashFlowForecast/<company>&prediction_length=<prediction_length>")
-def forecastCashFlow(company: str, prediction_length: int):
+def get_forecast_cash_flows(company: str, prediction_length: int):
 
     return make_response(f"Company {company} and prediction length {prediction_length}", status.HTTP_200_OK)

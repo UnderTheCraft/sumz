@@ -1,14 +1,18 @@
 from requests_html import HTMLSession
 import pandas as pd
-import json
 import traceback
+from restapi.companyInfo import CompanyInfo
+
+# TODO Import not used!
 from dateutil.parser import parse
+
+companies = CompanyInfo()
 
 # get cash flows of companies
 def get_cash_flows(company: str):
 
-    local_companies = ["sap"]
-    api_companies = ["AAPL", "MSFT", "JNJ", "WMT", "V", "JPM", "PG", "UNH", "HD", "INTC", "VZ", "DIS", "MRK", "XOM", "KO", "PFE", "CSCO", "CVX", "MCD", "NKE", "IBM", "BA", "MMM", "AXP", "GS", "CAT", "WBA", "DOW", "TRV"]
+    local_companies = companies.get_local_companies()
+    api_companies = companies.get_api_companies()
 
     if company.casefold() in local_companies:
         return get_from_local(company)
