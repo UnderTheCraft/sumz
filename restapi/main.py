@@ -20,13 +20,13 @@ print("RestX initialized")
 companyInfo = CompanyInfo()
 companyValues = CompanyValues()
 
-@application.route("/")
+@application.route("/",methods=['GET'])
 class MainClass(Resource):
     def get(self):
         # TODO: add an overview of available APIs
         return render_template('index.html')
 
-@application.route("/companies")
+@application.route("/companies",methods=['GET'])
 class Companies(Resource):
     def get(self):
         return companyInfo.get_all_companies()
