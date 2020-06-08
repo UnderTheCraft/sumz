@@ -1,26 +1,38 @@
 from flask import Flask, jsonify, make_response, render_template, Response
 from flask_cors import CORS
 from flask_api import status
+from flask_restplus import Api, Resource
+
 from restapi.companyInfo import CompanyInfo
 from restapi.companyValues import CompanyValues
 
+
 def appFactory():
-    app = Flask(__name__)
-    CORS(app)
+    flask_app = Flask(__name__)
+    CORS(flask_app)
+    app = Api(app=flask_app,
+              title="SUMZ",
+              description="Das Backend der SUMZ Anwendung für Unternehmensbewertung")
     return app
 
 application = appFactory()
+namespace = application.namespace('api', description='Main APIs')
 companyInfo = CompanyInfo()
 companyValues = CompanyValues()
 
-@application.route("/", methods=['GET'])
-def starting():
-    # TODO: add an overview of available APIs
-    return render_template('index.html')
+
+#@application.route("/", methods=['GET'])
+@namespace.route("/")
+class MainClass(Resource):
+    def get(self):
+        # TODO: add an overview of available APIs
+        return render_template('index.html')
+
 
 @application.route("/companies", methods=['GET'])
 def get_companies():
     return companyInfo.get_all_companies()
+
 
 @application.route("/methods", methods=['GET'])
 def get_methods():
@@ -33,8 +45,8 @@ def get_company_cash_flows(company: str):
         company_cash_flows = companyValues.get_cash_flows(company)
         company_cash_flows.append({"company": company.casefold()})
 
-        #cf_response = Response(json.dump(company_cash_flows))
-        #print("created cf_response object")
+        # cf_response = Response(json.dump(company_cash_flows))
+        # print("created cf_response object")
 
         response = make_response(jsonify(company_cash_flows), status.HTTP_200_OK)
         response.headers['content-type'] = 'application/json'
@@ -52,5 +64,4 @@ def get_company_cash_flows(company: str):
 
 @application.route("/getCashFlowForecast/<company>&prediction_length=<prediction_length>", methods=['GET'])
 def get_forecast_cash_flows(company: str, prediction_length: int):
-
     return make_response(f"Company {company} and prediction length {prediction_length}", status.HTTP_200_OK)
