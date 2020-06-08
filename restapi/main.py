@@ -9,10 +9,10 @@ flask_app = Flask(__name__)
 print("Flask App created")
 CORS(flask_app)
 print("CORS added")
-application = Api()
+application = Api(app=flask_app,
+                  title="SUMZ",
+                  description="Das Backend der SUMZ Anwendung für Unternehmensbewertung")
 print("RestX created")
-application.init_app(flask_app)
-print("RestX initialized")
 
 companyInfo = CompanyInfo()
 companyValues = CompanyValues()
