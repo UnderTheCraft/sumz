@@ -1,1 +1,1 @@
-web: gunicorn --log-file - restapi.main:application
+web: gunicorn --log-file - restapi.main:flask_app
