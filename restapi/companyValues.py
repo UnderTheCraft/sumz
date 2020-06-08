@@ -65,10 +65,11 @@ class CompanyValues:
 
                 FCFs.append([parsedDate, parsedFCF])
 
-            result_df = pd.DataFrame(FCFs[0:16], columns=['Date', 'FCF'])
-            result_json = result_df.to_dict(orient='records')
-            result_json.append({"currency": currency})
-            return result_json
+        result_df = pd.DataFrame(FCFs[0:16], columns=['Date', 'FCF'])
+        result_json = []
+        result_json.append({"Free Cash Flows" : result_df.to_dict(orient='records')})
+        result_json.append({"currency": currency})
+        return result_json
 
         except Exception as e:
             print(f"company not available within API!")
