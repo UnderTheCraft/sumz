@@ -29,8 +29,8 @@ class CompanyInfo:
         # TODO return self.__all_companies_with_description
         return {"companies": {"name": "AAPL", "description": "Apple"}}
 
-    # def get_local_companies(self):
-    #     return self.__local_companies_short
+    def get_local_companies(self):
+        return self.__local_companies_short
 
     def get_api_companies(self):
         return self.__api_companies_short
