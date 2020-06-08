@@ -31,6 +31,7 @@ class Companies(Resource):
     def get(self):
         return companyInfo.get_all_companies()
 
+
 #
 # @application.route("/methods", methods=['GET'])
 # def get_methods():
@@ -64,6 +65,3 @@ class Companies(Resource):
 # def get_forecast_cash_flows(company: str, prediction_length: int):
 #     return make_response(f"Company {company} and prediction length {prediction_length}", status.HTTP_200_OK)
 
-
-if __name__ == '__main__':
-    application.run(debug=True)
