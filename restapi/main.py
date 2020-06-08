@@ -1,16 +1,17 @@
 from flask import Flask, jsonify, make_response, render_template, Response
 from flask_cors import CORS
 from flask_api import status
-
+from restapi.companyInfo import CompanyInfo
+from restapi.companyValues import CompanyValues
 
 def appFactory():
     app = Flask(__name__)
     CORS(app)
     return app
 
-
 application = appFactory()
-
+companyInfo = CompanyInfo()
+companyValues = CompanyValues()
 
 @application.route("/")
 def starting():
@@ -19,7 +20,6 @@ def starting():
 
 @application.route("/companies")
 def get_companies():
-    from . import companyInfo
     return companyInfo.get_all_companies()
 
 @application.route("/methods")
@@ -29,9 +29,6 @@ def get_methods():
 
 @application.route("/getCashFlows/<company>")
 def get_company_cash_flows(company: str):
-    from . import companyValues
-    import json
-
     try:
         company_cash_flows = companyValues.get_cash_flows(company)
         company_cash_flows.append({"company": company.casefold()})
