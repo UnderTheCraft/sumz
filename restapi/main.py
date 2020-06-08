@@ -63,7 +63,7 @@ class CashFlows(Resource):
 class CashFlowForecast(Resource):
     def get(self, company, prediction_length):
         response = []
-        response.add({"compnay":company,"prediction_length":prediction_length})
+        response.append({"compnay":company,"prediction_length":prediction_length})
         response = make_response(jsonify(response),status.HTTP_200_OK)
         response.headers['content-type'] = 'application/json'
 
