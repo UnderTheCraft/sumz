@@ -8,3 +8,4 @@ numpy
 statsmodels
 requests-html
 requests_html
+flask_restplus
