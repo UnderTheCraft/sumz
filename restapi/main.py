@@ -8,6 +8,7 @@ from restapi.companyValues import CompanyValues
 flask_app = Flask(__name__)
 print("Flask App created")
 CORS(flask_app)
+print("CORS added")
 application = Api(app=flask_app,
                   title="SUMZ",
                   description="Das Backend der SUMZ Anwendung für Unternehmensbewertung")
