@@ -17,11 +17,10 @@ print("RestX created")
 companyInfo = CompanyInfo()
 companyValues = CompanyValues()
 
-@application.route("/", methods=['GET'])
+@application.route("/")
 class MainClass(Resource):
     def get(self):
-        # TODO: add an overview of available APIs
-        return render_template('index.html')
+        return make_response("Hello World", status.HTTP_200_OK)
 
 @application.route("/companies", methods=['GET'])
 class Companies(Resource):
@@ -29,13 +28,13 @@ class Companies(Resource):
         return companyInfo.get_all_companies()
 
 
-@application.route("/methods")
+@application.route("/methods", methods=['GET'])
 class Methods(Resource):
     def get(self):
         return {"methods": {"name": "APV", "description": "Adjusted Present Value"}}
 
 
-@application.route("/getCashFlows/<string:company>")
+@application.route("/getCashFlows/<string:company>", methods=['GET'])
 class CashFlows(Resource):
     def get(self, company):
         try:
@@ -58,8 +57,8 @@ class CashFlows(Resource):
 
         return make_response(f"Die Anfrage für das Unternehmen {company} konnte nicht bearbeitet werden!")
 
-
-@application.route("/getCashFlowForecast/<string:company>&prediction_length=<int:prediction_length>")
+ar
+@application.route("/getCashFlowForecast/<string:company>&prediction_length=<int:prediction_length>", methods=['GET'])
 class CashFlowForecast(Resource):
     def get(self, company, prediction_length):
         response = []
