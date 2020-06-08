@@ -6,31 +6,27 @@ from flask_restx import Api, Resource
 from restapi.companyInfo import CompanyInfo
 from restapi.companyValues import CompanyValues
 
+flask_app = Flask(__name__)
+CORS(flask_app)
+application = Api(app=flask_app,
+                  title="SUMZ",
+                  description="Das Backend der SUMZ Anwendung für Unternehmensbewertung")
 
-def appFactory():
-    flask_app = Flask(__name__)
-    CORS(flask_app)
-    app = Api(app=flask_app,
-              title="SUMZ",
-              description="Das Backend der SUMZ Anwendung für Unternehmensbewertung")
-    return app
-
-application = appFactory()
-namespace = application.namespace('api', description='Main APIs')
+# namespace = application.namespace('api', description='Main APIs')
 companyInfo = CompanyInfo()
 companyValues = CompanyValues()
 
 
-#@application.route("/", methods=['GET'])
-@namespace.route("/")
+# @application.route("/", methods=['GET'])
+@application.route("/")
 class MainClass(Resource):
     def get(self):
         # TODO: add an overview of available APIs
         return render_template('index.html')
 
 
-#@application.route("/companies", methods=['GET'])
-@namespace.route("/companies")
+# @application.route("/companies", methods=['GET'])
+@application.route("/companies")
 class Companies(Resource):
     def get(self):
         return companyInfo.get_all_companies()
@@ -67,3 +63,7 @@ class Companies(Resource):
 # @application.route("/getCashFlowForecast/<company>&prediction_length=<prediction_length>", methods=['GET'])
 # def get_forecast_cash_flows(company: str, prediction_length: int):
 #     return make_response(f"Company {company} and prediction length {prediction_length}", status.HTTP_200_OK)
+
+
+if __name__ == '__main__':
+    application.run(debug=True)
