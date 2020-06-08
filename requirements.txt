@@ -7,6 +7,4 @@ pandas
 numpy
 statsmodels
 requests-html
-requests_html
-flask_restplus
-Werkzeug==0.16.1
+flask-restx
