@@ -22,12 +22,12 @@ class CompanyInfo:
                                      "The Travellers Companies"]  # "Dow Inc","United Technologies Corporation"]
         self.__all_companies_long = self.__local_companies_long + self.__api_companies_long
 
-        # TODO Combine all_companies_short with all_companies_long in dictionary
-        # self.__all_companies_with_description =
+        self.__all_companies_with_description = [{"short_name": short_name, "long_name": long_name} for
+                                                 short_name, long_name in
+                                                 zip(self.__all_companies_short, self.__all_companies_long)]
 
     def get_all_companies(self):
-        # TODO return self.__all_companies_with_description
-        return {"companies": {"name": "AAPL", "description": "Apple"}}
+        return self.__all_companies_with_description
 
     def get_local_companies(self):
         return self.__local_companies_short
