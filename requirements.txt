@@ -7,5 +7,4 @@ pandas
 numpy
 statsmodels
 requests-html
-requests_html
-flask_restplus
+flask-restx
