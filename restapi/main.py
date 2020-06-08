@@ -2,8 +2,13 @@ from flask import Flask, jsonify, make_response, render_template, Response
 from flask_cors import CORS
 from flask_api import status
 from flask_restx import Api, Resource
+
+from restapi.arimaForecast import ARIMAForecast
 from restapi.companyInfo import CompanyInfo
 from restapi.companyValues import CompanyValues
+
+import pandas as pd
+import numpy as np
 
 flask_app = Flask(__name__)
 print("Flask App created")
@@ -60,8 +65,15 @@ class CashFlows(Resource):
 @application.route("/getCashFlowForecast/<string:company>&prediction_length=<int:prediction_length>", methods=['GET'])
 class CashFlowForecast(Resource):
     def get(self, company, prediction_length):
+
+        dates, fcfs, currency = CompanyValues().get_cash_flows_array(company)
+
+        forecast = ARIMAForecast.make_forecast(fcfs[0:16], prediction_length)
+
+        forecast_df = pd.DataFrame()
+        forecast_df["fcf"] = forecast
         response = []
-        response.append({"compnay":company,"prediction_length":prediction_length})
+        response.append({"compnay":company,"prediction_length":prediction_length,"forecast":forecast_df.to_dict(orient='records')})
         response = make_response(jsonify(response),status.HTTP_200_OK)
         response.headers['content-type'] = 'application/json'
 
