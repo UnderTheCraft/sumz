@@ -7,24 +7,23 @@ from restapi.companyValues import CompanyValues
 
 flask_app = Flask(__name__)
 print("Flask App created")
-#CORS(flask_app)
-#print("CORS added")
+CORS(flask_app)
+print("CORS added")
 application = Api()
 print("RestX created")
 application.init_app(flask_app)
 print("RestX initialized")
 
-# namespace = application.namespace('api', description='Main APIs')
 companyInfo = CompanyInfo()
 companyValues = CompanyValues()
 
-@application.route("/",methods=['GET'])
+@application.route("/", methods=['GET'])
 class MainClass(Resource):
     def get(self):
         # TODO: add an overview of available APIs
         return render_template('index.html')
 
-@application.route("/companies",methods=['GET'])
+@application.route("/companies", methods=['GET'])
 class Companies(Resource):
     def get(self):
         return companyInfo.get_all_companies()
