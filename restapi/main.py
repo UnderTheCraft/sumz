@@ -36,7 +36,7 @@ class Companies(Resource):
 @application.route("/methods", methods=['GET'])
 class Methods(Resource):
     def get(self):
-        return {"methods": {"name": "APV", "description": "Adjusted Present Value"}}
+        return [{"methods": {"name": "APV", "description": "Adjusted Present Value"}}]
 
 
 @application.route("/getCashFlows/<string:company>", methods=['GET'])
