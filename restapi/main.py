@@ -59,8 +59,7 @@ class CashFlows(Resource):
         except Exception as e:
             print("Es ist ein schwerwiegender Fehler aufgetreten")
             print(e)
-
-        return make_response(f"Die Anfrage für das Unternehmen {company} konnte nicht bearbeitet werden!")
+            return make_response(f"Die Anfrage für das Unternehmen {company} konnte nicht bearbeitet werden!", status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @application.route("/getCashFlowForecast/<string:company>&prediction_length=<int:prediction_length>", methods=['GET'])
 class CashFlowForecast(Resource):
