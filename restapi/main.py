@@ -86,4 +86,4 @@ class DefaultExpertValues(Resource):
         #TODO Outsorce values of variable
         risk_free_interest = 1.5
         market_risk_premium = 7.5
-        return [{"risk_free_interest": risk_free_interest, "market_risk_premium": market_risk_premium}]
+        return {"risk_free_interest": risk_free_interest, "market_risk_premium": market_risk_premium}
