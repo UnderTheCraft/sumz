@@ -45,24 +45,19 @@ class CashFlows(Resource):
         try:
             company_cash_flows = companyValues.get_cash_flows_json(company)
             company_cash_flows.append({"company": company.casefold()})
-
-            # cf_response = Response(json.dump(company_cash_flows))
-            # print("created cf_response object")
-
             response = make_response(jsonify(company_cash_flows), status.HTTP_200_OK)
             response.headers['content-type'] = 'application/json'
             print("returning response object")
             return response
 
         except NotImplementedError as e:
-            return make_response(f"Das Unternehmen {company} ist nicht verfügbar {str(e)}", status.HTTP_404_NOT_FOUND)
+            return make_response(f"Das Unternehmen {company} ist nicht verfügbar {str(e)}", status.HTTP_501_NOT_IMPLEMENTED)
         except Exception as e:
             print("Es ist ein schwerwiegender Fehler aufgetreten")
             print(e)
+            return make_response(f"Die Anfrage für das Unternehmen {company} konnte nicht bearbeitet werden!")
 
-        return make_response(f"Die Anfrage für das Unternehmen {company} konnte nicht bearbeitet werden!")
-
-@application.route("/getCashFlowForecast/<string:company>&prediction_length=<int:prediction_length>", methods=['GET'])
+@application.route("/getCashFlowForecast/<string:company>&prediction_length=<int:prediction_length>", methods=['GET'], status.HTTP_500_INTERNAL_SERVER_ERROR)
 class CashFlowForecast(Resource):
     def get(self, company, prediction_length):
 
@@ -72,11 +67,11 @@ class CashFlowForecast(Resource):
 
         forecast_df = pd.DataFrame()
         forecast_df["fcf"] = forecast
-        response = []
-        response.append({"compnay":company,"prediction_length":prediction_length,"forecast":forecast_df.to_dict(orient='records')})
-        response = make_response(jsonify(response),status.HTTP_200_OK)
+        result = [{"company": company,
+                     "prediction_length": prediction_length,
+                     "forecast": forecast_df.to_dict(orient='records')}]
+        response = make_response(jsonify(result), status.HTTP_200_OK)
         response.headers['content-type'] = 'application/json'
-
         return response
 
 @application.route("/getDefaultExpertValues", methods=['GET'])
@@ -86,4 +81,11 @@ class DefaultExpertValues(Resource):
         #TODO Outsorce values of variable
         risk_free_interest = 1.5
         market_risk_premium = 7.5
-        return {"risk_free_interest": risk_free_interest, "market_risk_premium": market_risk_premium}
+        response = {"risk_free_interest": risk_free_interest, "market_risk_premium": market_risk_premium}
+        return make_response(response, status.HTTP_200_OK)
+
+@application.route("/getBetaFactor/<string:company>", methods=['GET'])
+class BetaFactor(Resource):
+    def get(self, company):
+        response = {"beta_factor": companyValues.get_beta_factor(company)}
+        return make_response(response, status.HTTP_200_OK)
