@@ -63,7 +63,7 @@ class CompanyValues:
             session = HTMLSession()
 
             # TODO hier könnte ne tryExcept hin, falls z.b. keine Verbindung aufgebaut werden kann
-            response = session.get('https://ycharts.com/companies/' + company + '/free_cash_flow')
+            response = session.get(f'https://ycharts.com/companies/{company}/free_cash_flow')
 
             print(f"The headers of the requests are:\n{response.headers}")
 
@@ -87,7 +87,7 @@ class CompanyValues:
     def get_beta_factor(self, company: str):
         try:
             session = HTMLSession()
-            response = session.get('https://finance.yahoo.com/quote/' + company)
+            response = session.get(f'https://finance.yahoo.com/quote/{company}')
             beta_factor = response.html.find("[data-test='BETA_5Y-value']", first=True).text
             return beta_factor
 
@@ -95,7 +95,29 @@ class CompanyValues:
             print(f"company not available within API!")
             traceback.print_exc()
 
-    # get "Fremdkapital"
+    # get Liablilities (Fremdkapital)
+    def get_liabilities(self, company: str):
+        try:
+            session = HTMLSession()
+            response = session.get(f'https://finance.yahoo.com/quote/{company}/balance-sheet')
 
+            ''' HTML Aufbau
+            find: <div class="Pos(r)">
+                <div (Total Assets...)>
+                <div (Total Liabilities...)>
+                    <div (irgendwas bzw. erster eintrag)>
+                        <div (beschreibung reihe)>
+                        <div (erster Eintrag reihe -> jüngste verfügbare Zahl)>
+                            <span (mit der benötigten Zahl)>
+            '''
+            root_table = response.html.find(".Pos\(r\)", first=True)
+            total_liabilities = root_table.find("div")[1].find("div")[0]
+            row_liabilities = total_liabilities.find("div")[1]
+            liabilities = row_liabilities.find("span", first=True).text
+            return liabilities
+
+        except Exception as e:
+            print(f"company not available within API!")
+            traceback.print_exc()
 
     # TODO Other values?
