@@ -84,9 +84,18 @@ class CompanyValues:
 
 
     # get beta factor
+    def get_beta_factor(self, company: str):
+        try:
+            session = HTMLSession()
+            response = session.get('https://finance.yahoo.com/quote/' + company)
+            beta_factor = response.html.find("[data-test='BETA_5Y-value']", first=True).text
+            return beta_factor
 
+        except Exception as e:
+            print(f"company not available within API!")
+            traceback.print_exc()
 
-    # get "marktrisikoprämie"
+    # get "Fremdkapital"
 
 
     # TODO Other values?
