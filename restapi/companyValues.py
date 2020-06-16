@@ -3,6 +3,7 @@ import pandas as pd
 import traceback
 from restapi.companyInfo import CompanyInfo
 from dateutil import parser
+from datetime import datetime
 
 class CompanyValues:
 
@@ -80,9 +81,6 @@ class CompanyValues:
             print(f"company not available within API!")
             traceback.print_exc()
 
-    # ---------------------------------------------------------------------------------------------------------------------
-
-
     # get beta factor
     def get_beta_factor(self, company: str):
         try:
@@ -110,8 +108,8 @@ class CompanyValues:
 
             total_liabilities = []
             for i in range(1, 5):
-                total_liabilities.append({"date": table_heading.find("span")[i].text,
-                                          "value": liabilities_row.find("span")[i].text})
+                total_liabilities.append({"date": datetime.strptime(table_heading.find("span")[i].text, "%m/%d/%Y").date(),
+                                          "value": int(liabilities_row.find("span")[i].text.replace(',', ''))*1000})
 
             return total_liabilities
 
