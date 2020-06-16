@@ -93,6 +93,5 @@ class BetaFactor(Resource):
 @application.route("/getLiabilities/<string:company>", methods=['GET'])
 class Liabilities(Resource):
     def get(self, company):
-        response = {"liabilities": companyValues.get_liabilities(company),
-                    "comments": "values are in thousands!"}
+        response = {"total_liabilities": companyValues.get_liabilities(company)}
         return make_response(response, status.HTTP_200_OK)
