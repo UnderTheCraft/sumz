@@ -101,20 +101,19 @@ class CompanyValues:
             session = HTMLSession()
             response = session.get(f'https://finance.yahoo.com/quote/{company}/balance-sheet')
 
-            ''' HTML Aufbau
-            find: <div class="Pos(r)">
-                <div (Total Assets...)>
-                <div (Total Liabilities...)>
-                    <div (irgendwas bzw. erster eintrag)>
-                        <div (beschreibung reihe)>
-                        <div (erster Eintrag reihe -> jüngste verfügbare Zahl)>
-                            <span (mit der benötigten Zahl)>
-            '''
-            root_table = response.html.find(".Pos\(r\)", first=True)
-            total_liabilities = root_table.find("div")[1].find("div")[0]
-            row_liabilities = total_liabilities.find("div")[1]
-            liabilities = row_liabilities.find("span", first=True).text
-            return liabilities
+            root = response.html.find("#Col1-1-Financials-Proxy", first=True)
+            root_table = root.find("div + div")[4]
+            table = root_table.find("div")[2]
+            table_heading = table.find(".D\(tbhg\)", first=True)
+            table_data = table.find(".D\(tbrg\)", first=True)
+            liabilities_row = table_data.find("[data-test='fin-row']")[1]
+
+            total_liabilities = []
+            for i in range(1, 5):
+                total_liabilities.append({"date": table_heading.find("span")[i].text,
+                                          "value": liabilities_row.find("span")[i].text})
+
+            return total_liabilities
 
         except Exception as e:
             print(f"company not available within API!")
