@@ -57,7 +57,7 @@ class CompanyValues:
         return result_json
 
 
-    def get_cash_flows_array(self, company):
+    def get_cash_flows_array(self, company,length = 16):
 
         try:
             abbrevationToNumber = {'K': 3, 'M': 6, 'B': 9, 'T': 12}
@@ -75,7 +75,7 @@ class CompanyValues:
             dates = [parser.parse(rawDate.text) for rawDate in raw_dates]
             fcfs = [int(float(rawFCF.text[:-1]) * 10 ** abbrevationToNumber[rawFCF.text[-1]]) for rawFCF in raw_fcfs]
 
-            return dates,fcfs,currency
+            return dates[:length-1],fcfs[:length-1],currency
 
         except Exception as e:
             print(f"company not available within API!")
