@@ -3,21 +3,20 @@ from restapi.companyValues import CompanyValues
 
 class APV:
 
-    def __init__(self,company,riskfreeInterestRate,marktetRiskPremium):
+    def __init__(self, company: str, riskfreeInterestRate, marketRiskPremium):
         self.company = company
         self.riskfreeInterestRate = riskfreeInterestRate
-        self.marketRiskPremium = marktetRiskPremium
+        self.marketRiskPremium = marketRiskPremium
         self.companyValues = CompanyValues()
 
-
     def calculateEnterpriseValue(self):
+        enterprise_value = self.calculatePresentValueOfCashFlow() + \
+                           self.calculatePresentValueOfTaxShield() - \
+                           self.getDebt()
 
-        enterpriseValue = self.calculatePresentValueOfCashFlow() + self.calculatePresentValueOfTaxShield() - self.getDebt()
-
-        return enterpriseValue
+        return enterprise_value
 
     def calculatePresentValueOfCashFlow(self):
-
         return
 
     def calculatePresentValueOfTaxShield(self):
@@ -27,7 +26,8 @@ class APV:
         return
 
     def calculateEquityInterest(self):
+        equity_interest = self.riskfreeInterestRate + \
+                          self.marketRiskPremium * \
+                          self.companyValues.get_beta_factor(self.company)
 
-        equityInterest = self.riskfreeInterestRate + self.marketRiskPremium * self.companyValues.get_beta_factor(self.company)
-
-        return equityInterest
+        return equity_interest
