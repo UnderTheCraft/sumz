@@ -57,7 +57,7 @@ class CompanyValues:
         return result_json
 
 
-    def get_cash_flows_array(self, company,length = 16):
+    def get_cash_flows_array(self, company):
 
         try:
             abbrevationToNumber = {'K': 3, 'M': 6, 'B': 9, 'T': 12}
@@ -68,6 +68,7 @@ class CompanyValues:
 
             print(f"The headers of the requests are:\n{response.headers}")
 
+            # TODO Zweite spalte mit cashflows sollte auch noch berücksichtigt werden
             raw_dates = response.html.find(".histDataTable", first=True).find(".col1")[1:]
             raw_fcfs = response.html.find(".histDataTable", first=True).find(".col2")[1:]
             currency = response.html.find("#securityQuote", first=True).find(".info")[1].text
@@ -75,7 +76,7 @@ class CompanyValues:
             dates = [parser.parse(rawDate.text) for rawDate in raw_dates]
             fcfs = [int(float(rawFCF.text[:-1]) * 10 ** abbrevationToNumber[rawFCF.text[-1]]) for rawFCF in raw_fcfs]
 
-            return dates[:length],fcfs[:length],currency
+            return dates,fcfs,currency
 
         except Exception as e:
             print(f"company not available within API!")
