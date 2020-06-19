@@ -1,13 +1,18 @@
 from restapi.companyValues import CompanyValues
+from restapi.marketValues import MarketValues
 
 
 class APV:
 
-    def __init__(self, company: str, riskfreeInterestRate, marketRiskPremium):
+    def __init__(self, company: str, risk_free_interest_rate: float = None, market_risk_premium: float = None):
         self.company = company
-        self.riskfreeInterestRate = riskfreeInterestRate
-        self.marketRiskPremium = marketRiskPremium
         self.companyValues = CompanyValues()
+        self.marketValues = MarketValues()
+
+        if risk_free_interest_rate is not None:
+            self.marketValues.set_risk_free_interest(risk_free_interest_rate)
+        if market_risk_premium is not None:
+            self.marketValues.set_market_risk_premium(market_risk_premium)
 
     def calculateEnterpriseValue(self):
         enterprise_value = self.calculatePresentValueOfCashFlow() + \
@@ -26,8 +31,8 @@ class APV:
         return
 
     def calculateEquityInterest(self):
-        equity_interest = self.riskfreeInterestRate + \
-                          self.marketRiskPremium * \
+        equity_interest = self.marketValues.set_risk_free_interest() + \
+                          self.marketValues.get_market_risk_premium() * \
                           self.companyValues.get_beta_factor(self.company)
 
         return equity_interest

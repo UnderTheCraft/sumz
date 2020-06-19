@@ -6,6 +6,7 @@ from flask_restx import Api, Resource
 from restapi.arimaForecast import ARIMAForecast
 from restapi.companyInfo import CompanyInfo
 from restapi.companyValues import CompanyValues
+from restapi.marketValues import MarketValues
 
 import pandas as pd
 import numpy as np
@@ -21,6 +22,7 @@ print("RestX created")
 
 companyInfo = CompanyInfo()
 companyValues = CompanyValues()
+marketValues = MarketValues()
 
 @application.route("/")
 class MainClass(Resource):
@@ -76,12 +78,9 @@ class CashFlowForecast(Resource):
 
 @application.route("/getDefaultExpertValues", methods=['GET'])
 class DefaultExpertValues(Resource):
-
     def get(self):
-        #TODO Outsorce values of variable
-        risk_free_interest = 1.5
-        market_risk_premium = 7.5
-        response = {"risk_free_interest": risk_free_interest, "market_risk_premium": market_risk_premium}
+        response = {"risk_free_interest": MarketValues.get_risk_free_interest(),
+                    "market_risk_premium": MarketValues.get_market_risk_premium()}
         return make_response(response, status.HTTP_200_OK)
 
 @application.route("/getBetaFactor/<string:company>", methods=['GET'])
