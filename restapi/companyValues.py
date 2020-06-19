@@ -75,7 +75,7 @@ class CompanyValues:
             dates = [parser.parse(rawDate.text) for rawDate in raw_dates]
             fcfs = [int(float(rawFCF.text[:-1]) * 10 ** abbrevationToNumber[rawFCF.text[-1]]) for rawFCF in raw_fcfs]
 
-            return dates[:length-1],fcfs[:length-1],currency
+            return dates[:length],fcfs[:length],currency
 
         except Exception as e:
             print(f"company not available within API!")
