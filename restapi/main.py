@@ -79,8 +79,8 @@ class CashFlowForecast(Resource):
 @application.route("/getDefaultExpertValues", methods=['GET'])
 class DefaultExpertValues(Resource):
     def get(self):
-        response = {"risk_free_interest": MarketValues.get_risk_free_interest(),
-                    "market_risk_premium": MarketValues.get_market_risk_premium()}
+        response = {"risk_free_interest": marketValues.get_risk_free_interest(),
+                    "market_risk_premium": marketValues.get_market_risk_premium()}
         return make_response(response, status.HTTP_200_OK)
 
 @application.route("/getBetaFactor/<string:company>", methods=['GET'])
