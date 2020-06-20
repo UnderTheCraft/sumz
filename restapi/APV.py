@@ -1,3 +1,4 @@
+from restapi.BaseMethod import BaseMethod
 from restapi.arimaForecast import ARIMAForecast
 from restapi.companyValues import CompanyValues
 from restapi.marketValues import MarketValues
@@ -5,9 +6,9 @@ from datetime import datetime
 import numpy as np
 
 
-class APV:
+class APV(BaseMethod):
 
-    def __init__(self, company: str, last_date_forecast: datetime = None ,risk_free_interest_rate: float = None, market_risk_premium: float = None):
+    def __init__(self, company: str = None, last_date_forecast: datetime = None, risk_free_interest_rate: float = None, market_risk_premium: float = None):
         self.company = company
         self.last_date_forecast = last_date_forecast
         self.companyValues = CompanyValues()
@@ -27,10 +28,12 @@ class APV:
 
     def calculatePresentValueOfCashFlow(self):
 
-        dates, fcfs,  = CompanyValues().get_cash_flows_array(self.company)
+        dates, fcfs,currency  = CompanyValues().get_cash_flows_array(self.company)
+
+        self.currency = currency
 
         if self.last_date_forecast is None:
-            last_date_forecast = dates[0]
+            self.last_date_forecast = dates[0]
             past_fcfs = fcfs[0:20]
 
         # TODO wenn Datum angegeben
@@ -65,3 +68,11 @@ class APV:
                           self.companyValues.get_beta_factor(self.company)
 
         return equity_interest
+
+    def getAdditionalValues(self):
+
+        additionalVaules = {"Number of values used for forecast": self.number_of_values_for_forecast,
+                            "Date of last used past value": self.last_date_forecast,
+                            "Currency":self.currency}
+
+        return additionalVaules

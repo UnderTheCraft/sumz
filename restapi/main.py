@@ -1,8 +1,9 @@
-from flask import Flask, jsonify, make_response, render_template, Response
+from flask import Flask, jsonify, make_response, render_template, Response, request
 from flask_cors import CORS
 from flask_api import status
 from flask_restx import Api, Resource
 
+from restapi.APVInformation import APVInformation
 from restapi.arimaForecast import ARIMAForecast
 from restapi.companyInfo import CompanyInfo
 from restapi.companyValues import CompanyValues
@@ -23,6 +24,8 @@ print("RestX created")
 companyInfo = CompanyInfo()
 companyValues = CompanyValues()
 marketValues = MarketValues()
+# TODO Metodenliste auslagern
+methods = {APVInformation().method_name:APVInformation()}
 
 @application.route("/")
 class MainClass(Resource):
@@ -38,7 +41,8 @@ class Companies(Resource):
 @application.route("/methods", methods=['GET'])
 class Methods(Resource):
     def get(self):
-        return [{"method": "APV", "description": "Adjusted Present Value"}]
+        response = [method.__repr__() for method in methods.items()]
+        return make_response(response, status.HTTP_200_OK)
 
 
 @application.route("/getCashFlows/<string:company>", methods=['GET'])
@@ -94,3 +98,21 @@ class Liabilities(Resource):
     def get(self, company):
         response = {"total_liabilities": companyValues.get_liabilities(company)}
         return make_response(response, status.HTTP_200_OK)
+
+@application.route("/getCorporateValue/<string:company>/<string:method>", methods=['GET'])
+class EnterpriseValueCalculation(Resource):
+    def get(self,company,method):
+
+        last_date_forecast = request.args.get('last_date_forecast')
+        risk_free_interest_rate = request.args.get('risk_free_interest_rate')
+        market_risk_premium = request.args.get('market_risk_premium')
+
+        enterpriseValueCalculator = methods[method].getInstance()(company, last_date_forecast, risk_free_interest_rate, market_risk_premium)
+
+        enterpirseValue = enterpriseValueCalculator.calculateEnterpriseValue()
+
+        additionalInformation = enterpriseValueCalculator.getAdditionalValues()
+
+        response = {"Enterprise Value": enterpirseValue, ** additionalInformation}
+
+        return make_response(response,status.HTTP_200_OK)
