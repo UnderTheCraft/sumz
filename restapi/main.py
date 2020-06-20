@@ -43,7 +43,7 @@ class Methods(Resource):
     def get(self):
         print(methods)
         response = [method.dictDescription() for method in methods.values()]
-        return make_response(response, status.HTTP_200_OK)
+        return response
 
 
 @application.route("/getCashFlows/<string:company>", methods=['GET'])
