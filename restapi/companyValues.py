@@ -88,7 +88,7 @@ class CompanyValues:
             session = HTMLSession()
             response = session.get(f'https://finance.yahoo.com/quote/{company}')
             beta_factor = response.html.find("[data-test='BETA_5Y-value']", first=True).text
-            return beta_factor
+            return float(beta_factor)
 
         except Exception as e:
             print(f"company not available within API!")

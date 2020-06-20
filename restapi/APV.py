@@ -8,7 +8,8 @@ import numpy as np
 
 class APV(BaseMethod):
 
-    def __init__(self, company: str = None, last_date_forecast: datetime = None, risk_free_interest_rate: float = None, market_risk_premium: float = None):
+    def __init__(self, company: str = None, last_date_forecast: datetime = None, risk_free_interest_rate: float = None,
+                 market_risk_premium: float = None):
         self.company = company
         self.last_date_forecast = last_date_forecast
         self.companyValues = CompanyValues()
@@ -28,7 +29,7 @@ class APV(BaseMethod):
 
     def calculatePresentValueOfCashFlow(self):
 
-        dates, fcfs,currency  = CompanyValues().get_cash_flows_array(self.company)
+        dates, fcfs, currency = CompanyValues().get_cash_flows_array(self.company)
 
         self.currency = currency
 
@@ -42,17 +43,16 @@ class APV(BaseMethod):
 
         forecast_fcfs_quarterly = ARIMAForecast().make_forecast(past_fcfs, 20)
 
-        forecast_fcfs_year = np.sum(np.array_split(forecast_fcfs_quarterly,4),axis=1)
+        forecast_fcfs_year = np.sum(np.array_split(forecast_fcfs_quarterly, 4), axis=1)
         print(forecast_fcfs_year)
 
         GKu = 0
         equity_interest = self.calculateEquityInterest()
 
-        for i in range(len(forecast_fcfs_year)-1):
+        for i in range(len(forecast_fcfs_year) - 1):
+            GKu = GKu + forecast_fcfs_year / ((1 + equity_interest) ** i)
 
-            GKu = GKu + forecast_fcfs_year/((1+equity_interest)**i)
-
-        GKu = forecast_fcfs_year[-1]/(equity_interest*(1+equity_interest)**len(forecast_fcfs_year))
+        GKu = forecast_fcfs_year[-1] / (equity_interest * (1 + equity_interest) ** len(forecast_fcfs_year))
 
         return GKu
 
@@ -64,8 +64,8 @@ class APV(BaseMethod):
 
     def calculateEquityInterest(self):
         equity_interest = self.marketValues.get_risk_free_interest() + \
-                          self.marketValues.get_market_risk_premium() * \
-                          self.companyValues.get_beta_factor(self.company)
+                          (self.marketValues.get_market_risk_premium() * \
+                           self.companyValues.get_beta_factor(self.company))
 
         return equity_interest
 
@@ -73,6 +73,6 @@ class APV(BaseMethod):
 
         additionalVaules = {"Number of values used for forecast": self.number_of_values_for_forecast,
                             "Date of last used past value": self.last_date_forecast,
-                            "Currency":self.currency}
+                            "Currency": self.currency}
 
         return additionalVaules
