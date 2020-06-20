@@ -40,7 +40,7 @@ class APV(BaseMethod):
 
         self.number_of_values_for_forecast = len(past_fcfs)
 
-        forecast_fcfs_quarterly = ARIMAForecast().make_forecast(past_fcfs,forecast_length=20)
+        forecast_fcfs_quarterly = ARIMAForecast().make_forecast(past_fcfs, 20)
 
         forecast_fcfs_year = np.sum(np.array_split(forecast_fcfs_quarterly,4),axis=1)
         print(forecast_fcfs_year)
