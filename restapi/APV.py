@@ -1,4 +1,4 @@
-from restapi.BaseMethod import BaseMethod
+from restapi.baseMethod import BaseMethod
 from restapi.arimaForecast import ARIMAForecast
 from restapi.companyValues import CompanyValues
 from restapi.marketValues import MarketValues
