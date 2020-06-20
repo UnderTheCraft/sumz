@@ -41,7 +41,7 @@ class Companies(Resource):
 @application.route("/methods", methods=['GET'])
 class Methods(Resource):
     def get(self):
-        response = [method.__repr__() for method in methods.items()]
+        response = [method.dictDescription() for method in methods.items()]
         return make_response(response, status.HTTP_200_OK)
 
 
