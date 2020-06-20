@@ -46,7 +46,7 @@ class APV(BaseMethod):
         forecast_fcfs_quarterly = ARIMAForecast().make_forecast(past_fcfs, 20)
         print("FCF quarterly "+str(forecast_fcfs_quarterly))
 
-        forecast_fcfs_year = np.sum(np.array_split(forecast_fcfs_quarterly, 4), axis=1)
+        forecast_fcfs_year = np.sum(np.array_split(forecast_fcfs_quarterly, 5), axis=1)
         print("FCF year" + str(forecast_fcfs_year))
 
         GKu = 0
