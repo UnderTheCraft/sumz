@@ -95,6 +95,7 @@ class CompanyValues:
             traceback.print_exc()
 
     # get Liablilities (Fremdkapital)
+    # TODO quarterly
     def get_liabilities(self, company: str):
         try:
             session = HTMLSession()

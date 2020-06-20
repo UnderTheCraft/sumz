@@ -41,16 +41,20 @@ class APV(BaseMethod):
 
         self.number_of_values_for_forecast = len(past_fcfs)
 
+        print("Past fcfs "+past_fcfs)
+
         forecast_fcfs_quarterly = ARIMAForecast().make_forecast(past_fcfs, 20)
+        print("FCF quarterly "+forecast_fcfs_quarterly)
 
         forecast_fcfs_year = np.sum(np.array_split(forecast_fcfs_quarterly, 4), axis=1)
-        print(forecast_fcfs_year)
+        print("FCF year" + forecast_fcfs_year)
 
         GKu = 0
-        equity_interest = self.calculateEquityInterest()
+        equity_interest = self.calculateEquityInterest()/100
+        print("Equityinterest " + equity_interest)
 
         for i in range(len(forecast_fcfs_year) - 1):
-            GKu = GKu + forecast_fcfs_year / ((1 + equity_interest) ** i)
+            GKu = GKu + (forecast_fcfs_year / ((1 + equity_interest) ** i))
 
         GKu = forecast_fcfs_year[-1] / (equity_interest * (1 + equity_interest) ** len(forecast_fcfs_year))
 
