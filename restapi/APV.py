@@ -63,7 +63,7 @@ class APV(BaseMethod):
         return 0
 
     def calculateEquityInterest(self):
-        equity_interest = self.marketValues.set_risk_free_interest() + \
+        equity_interest = self.marketValues.get_risk_free_interest() + \
                           self.marketValues.get_market_risk_premium() * \
                           self.companyValues.get_beta_factor(self.company)
 
