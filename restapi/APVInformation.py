@@ -8,7 +8,7 @@ class APVInformation:
         self.method_description = "Adjustet Present Value"
 
     def __repr__(self):
-        repr = {"method": self.method_name, "description": self.description}
+        repr = {"method": self.method_name, "description": self.method_description}
         return repr
 
     def getInstance(self):

@@ -25,7 +25,7 @@ companyInfo = CompanyInfo()
 companyValues = CompanyValues()
 marketValues = MarketValues()
 # TODO Metodenliste auslagern
-methods = {APVInformation().method_name:APVInformation()}
+methods = {APVInformation().method_name : APVInformation()}
 
 @application.route("/")
 class MainClass(Resource):
