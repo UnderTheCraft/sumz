@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, make_response, render_template, Response, request
+from flask import Flask, jsonify, make_response, request, send_file
 from flask_cors import CORS
 from flask_api import status
 from flask_restx import Api, Resource
@@ -128,4 +128,5 @@ class EnterpriseValueCalculation(Resource):
 class StockChart(Resource):
     def get(self, company):
         chart_image = companyValues.get_stock_chart(company)
-        return make_response(chart_image, status.HTTP_200_OK)
+        return send_file(chart_image, mimetype="image/jpeg")
+        # return make_response(chart_image, status.HTTP_200_OK)
