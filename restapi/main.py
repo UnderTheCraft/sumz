@@ -100,6 +100,12 @@ class Liabilities(Resource):
         response = {"total_liabilities": companyValues.get_liabilities(company)}
         return make_response(response, status.HTTP_200_OK)
 
+@application.route("/getMarketCapitalization/<string:company>", methods=["GET"])
+class MarketCapitalization(Resource):
+    def get(self, company):
+        response = {"market_capitalization": companyValues.get_market_capitalization(company)}
+        return make_response(response, status.HTTP_200_OK)
+
 @application.route("/getCorporateValue/<string:company>/<string:method>", methods=['GET'])
 class EnterpriseValueCalculation(Resource):
     def get(self,company,method):

@@ -9,6 +9,7 @@ class CompanyValues:
 
     def __init__(self):
         self.__companies = CompanyInfo()
+        self.__abbrevationToNumber = {'K': 3, 'M': 6, 'B': 9, 'T': 12}
 
     # get cash flows of companies
     def get_cash_flows_json(self, company: str):
@@ -60,7 +61,7 @@ class CompanyValues:
     def get_cash_flows_array(self, company):
 
         try:
-            abbrevationToNumber = {'K': 3, 'M': 6, 'B': 9, 'T': 12}
+
             session = HTMLSession()
 
             # TODO hier könnte ne tryExcept hin, falls z.b. keine Verbindung aufgebaut werden kann
@@ -74,7 +75,7 @@ class CompanyValues:
             currency = response.html.find("#securityQuote", first=True).find(".info")[1].text
 
             dates = [parser.parse(rawDate.text) for rawDate in raw_dates]
-            fcfs = [int(float(rawFCF.text[:-1]) * 10 ** abbrevationToNumber[rawFCF.text[-1]]) for rawFCF in raw_fcfs]
+            fcfs = [int(float(rawFCF.text[:-1]) * 10 ** self.__abbrevationToNumber[rawFCF.text[-1]]) for rawFCF in raw_fcfs]
 
             return dates,fcfs,currency
 
@@ -114,6 +115,22 @@ class CompanyValues:
                                           "value": int(liabilities_row.find("span")[i].text.replace(',', ''))*1000})
 
             return total_liabilities
+
+        except Exception as e:
+            print(f"company not available within API!")
+            traceback.print_exc()
+
+    # Markkapitalisierung
+    def get_market_capitalization(self, company: str):
+        try:
+            session = HTMLSession()
+            response = session.get(f'https://finance.yahoo.com/quote/{company}')
+            market_cap = response.html.find("[data-test=MARKET_CAP-value]", first=True).text
+
+            number = market_cap[:-1]
+            abbr = market_cap[-1]
+
+            return float(number) * 10 ** self.__abbrevationToNumber[abbr]
 
         except Exception as e:
             print(f"company not available within API!")
