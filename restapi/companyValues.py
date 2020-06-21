@@ -4,6 +4,9 @@ import traceback
 from restapi.companyInfo import CompanyInfo
 from dateutil import parser
 from datetime import datetime
+from matplotlib import pyplot as plt
+from io import BytesIO
+from PIL import Image
 
 class CompanyValues:
 
@@ -92,7 +95,7 @@ class CompanyValues:
             return float(beta_factor)
 
         except Exception as e:
-            print(f"company not available within API!")
+            print(f"beta factor of company {company} not available within API!")
             traceback.print_exc()
 
     # get Liablilities (Fremdkapital)
@@ -117,7 +120,7 @@ class CompanyValues:
             return total_liabilities
 
         except Exception as e:
-            print(f"company not available within API!")
+            print(f"liabilities of company {company} not available within API!")
             traceback.print_exc()
 
     # Markkapitalisierung
@@ -133,7 +136,29 @@ class CompanyValues:
             return float(number) * 10 ** self.__abbrevationToNumber[abbr]
 
         except Exception as e:
-            print(f"company not available within API!")
+            print(f"market capitalization of company {company} not available within API!")
             traceback.print_exc()
+
+    def get_stock_chart(self, company: str):
+        try:
+            session = HTMLSession()
+            response = session.get(f'https://query1.finance.yahoo.com/v8/finance/chart/{company}?region=US&interval=1wk&range=1y')
+
+            # timestamp = response["chart"]["result"][0]["timestamp"]
+            indicators = response["chart"]["result"][0]["indicators"]
+            closing_prices = indicators["adjclose"][0]["adjclose"]
+
+            buffer = BytesIO()
+            plt.plot(closing_prices)
+            plt.savefig(buffer)
+            image = Image.open(buffer)
+
+            return image
+
+        except:
+            print(f"stock chart of company {company} not available within API!")
+            traceback.print_exc()
+
+
 
     # TODO Other values?

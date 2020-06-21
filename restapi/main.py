@@ -123,3 +123,9 @@ class EnterpriseValueCalculation(Resource):
         response = {"Enterprise Value": enterpirseValue, ** additionalInformation}
 
         return make_response(response,status.HTTP_200_OK)
+
+@application.route("/getStockChart/<string:company>", methods=['GET'])
+class StockChart(Resource):
+    def get(self, company):
+        chart_image = companyValues.get_stock_chart(company)
+        return make_response(chart_image, status.HTTP_200_OK)

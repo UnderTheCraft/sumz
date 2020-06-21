@@ -8,3 +8,4 @@ numpy
 statsmodels
 requests-html
 flask-restx
+matplotlib
