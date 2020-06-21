@@ -9,3 +9,4 @@ statsmodels
 requests-html
 flask-restx
 matplotlib
+pillow
