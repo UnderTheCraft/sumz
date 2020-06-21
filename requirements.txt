@@ -10,3 +10,4 @@ requests-html
 flask-restx
 matplotlib
 pillow
+json

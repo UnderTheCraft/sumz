@@ -7,6 +7,7 @@ from datetime import datetime
 from matplotlib import pyplot as plt
 from io import BytesIO
 from PIL import Image
+import json
 
 class CompanyValues:
 
@@ -143,6 +144,7 @@ class CompanyValues:
         try:
             session = HTMLSession()
             response = session.get(f'https://query1.finance.yahoo.com/v8/finance/chart/{company}?region=US&interval=1wk&range=1y')
+            response = json.loads(response.text)
 
             # timestamp = response["chart"]["result"][0]["timestamp"]
             indicators = response["chart"]["result"][0]["indicators"]
