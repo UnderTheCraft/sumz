@@ -4,7 +4,8 @@ import pandas as pd
 import traceback
 from restapi.companyInfo import CompanyInfo
 from dateutil import parser
-from datetime import datetime, time
+from datetime import datetime
+import time
 from matplotlib import pyplot as plt
 from io import BytesIO
 from PIL import Image
@@ -130,7 +131,6 @@ class CompanyValues:
             response = requests.get(f"https://query2.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/{company}"
                                     f"?type=2CquarterlyNetDebt%2CquarterlyTotalLiabilitiesNetMinorityInterest&period1"
                                     f"=493590046&period2={period2}&corsDomain=finance.yahoo.com").json()
-            print(response)
             result = response["timeseries"]["result"]
             dates = [datetime.datetime.fromtimestamp(timestamp) for timestamp in result["timestamp"]]
             liability_objects = result["quarterlyTotalLiabilitiesNetMinorityInterest"]
