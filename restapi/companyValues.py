@@ -1,9 +1,10 @@
 from requests_html import HTMLSession
+import requests
 import pandas as pd
 import traceback
 from restapi.companyInfo import CompanyInfo
 from dateutil import parser
-from datetime import datetime
+from datetime import datetime, time
 from matplotlib import pyplot as plt
 from io import BytesIO
 from PIL import Image
@@ -100,7 +101,6 @@ class CompanyValues:
             traceback.print_exc()
 
     # get Liablilities (Fremdkapital)
-    # TODO quarterly
     def get_liabilities(self, company: str):
         try:
             session = HTMLSession()
@@ -119,6 +119,28 @@ class CompanyValues:
                                           "value": int(liabilities_row.find("span")[i].text.replace(',', ''))*1000})
 
             return total_liabilities
+
+        except Exception as e:
+            print(f"liabilities of company {company} not available within API!")
+            traceback.print_exc()
+
+    def get_quarterly_liabilities(self,company:str,as_json = False):
+        try:
+            period2 = str(int(time.time()))
+            response = requests.get(f"https://query2.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/{company}"
+                                    f"?type=2CquarterlyNetDebt%2CquarterlyTotalLiabilitiesNetMinorityInterest&period1"
+                                    f"=493590046&period2={period2}&corsDomain=finance.yahoo.com").json()
+
+            result = response["timeseries"]["result"]
+            dates = [datetime.datetime.fromtimestamp(timestamp) for timestamp in result["timestamp"]]
+            liability_objects = result["quarterlyTotalLiabilitiesNetMinorityInterest"]
+
+            liabilities = [liability_object["reportedValue"]["raw"] for liability_object in liability_objects]
+
+            if as_json:
+                return [{'date': date, 'liability': liability} for date, liability in zip(dates, liabilities)]
+            else:
+                return dates, liabilities
 
         except Exception as e:
             print(f"liabilities of company {company} not available within API!")
