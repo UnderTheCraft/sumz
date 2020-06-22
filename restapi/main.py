@@ -69,7 +69,7 @@ class CashFlows(Resource):
                                  status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-@application.route("/getCashFlowForecast/<string:company>?prediction_length=<int:prediction_length>", methods=['GET'])
+@application.route("/getCashFlowForecast/<string:company>/?prediction_length=<int:prediction_length>", methods=['GET'])
 class CashFlowForecast(Resource):
     def get(self, company, prediction_length):
         dates, fcfs, currency = CompanyValues().get_cash_flows_array(company)
@@ -123,7 +123,7 @@ class MarketCapitalization(Resource):
 
 
 @application.route("/getCorporateValue/<string:company>/<string:method>")
-@application.route("/getCorporateValue/<string:company>/<string:method>?last_date_forecast=<string:last_date_forecast"
+@application.route("/getCorporateValue/<string:company>/<string:method>/?last_date_forecast=<string:last_date_forecast"
                    ">&risk_free_interest_rate=<float:risk_free_interest_rate>&market_risk_premium=<float"
                    ":market_risk_premium>",
                    methods=['GET'])
