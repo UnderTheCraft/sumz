@@ -102,7 +102,7 @@ class CompanyValues:
             traceback.print_exc()
 
     # get Liablilities (Fremdkapital)
-    def get_liabilities(self, company: str):
+    def get_yearly_liabilities(self, company: str):
         try:
             session = HTMLSession()
             response = session.get(f'https://finance.yahoo.com/quote/{company}/balance-sheet')
@@ -168,16 +168,19 @@ class CompanyValues:
             response = session.get(f'https://query1.finance.yahoo.com/v8/finance/chart/{company}?region=US&interval=1wk&range=1y')
             response = json.loads(response.text)
 
-            # timestamp = response["chart"]["result"][0]["timestamp"]
+            timestamps = response["chart"]["result"][0]["timestamp"]
             indicators = response["chart"]["result"][0]["indicators"]
             closing_prices = indicators["adjclose"][0]["adjclose"]
 
-            buffer = BytesIO()
-            plt.plot(closing_prices)
-            plt.savefig(buffer)
-            image = Image.open(buffer)
+            chart_values = [{"x": datetime.fromtimestamp(timestamp), "y": price}
+                            for timestamp, price in zip(timestamps, closing_prices)]
 
-            return image
+            # buffer = BytesIO()
+            # plt.plot(closing_prices)
+            # plt.savefig(buffer)
+            # image = Image.open(buffer)
+
+            return chart_values
 
         except:
             print(f"stock chart of company {company} not available within API!")

@@ -101,15 +101,15 @@ class BetaFactor(Resource):
         return make_response(response, status.HTTP_200_OK)
 
 
-@application.route("/getLiabilities/<string:company>", methods=['GET'])
-class Liabilities(Resource):
+@application.route("/getYearlyLiabilities/<string:company>", methods=['GET'])
+class YearlyLiabilities(Resource):
     def get(self, company):
-        response = {"total_liabilities": companyValues.get_liabilities(company)}
+        response = {"total_liabilities": companyValues.get_yearly_liabilities(company)}
         return make_response(response, status.HTTP_200_OK)
 
 
 @application.route("/getQuarterlyLiabilities/<string:company>", methods=['GET'])
-class Liabilities(Resource):
+class QuarterlyLiabilities(Resource):
     def get(self, company):
         response = {"total_liabilities": companyValues.get_quarterly_liabilities(company, True)}
         return make_response(response, status.HTTP_200_OK)
@@ -145,6 +145,6 @@ class EnterpriseValueCalculation(Resource):
 @application.route("/getStockChart/<string:company>", methods=['GET'])
 class StockChart(Resource):
     def get(self, company):
-        chart_image = companyValues.get_stock_chart(company)
-        return send_file(chart_image, mimetype="image/jpeg")
+        chart_values = companyValues.get_stock_chart(company)
+        return make_response(chart_values, status.HTTP_200_OK)
         # return make_response(chart_image, status.HTTP_200_OK)
