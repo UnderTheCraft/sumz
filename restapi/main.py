@@ -1,3 +1,4 @@
+from dateutil import parser
 from flask import Flask, jsonify, make_response, request, send_file
 from flask_cors import CORS
 from flask_api import status
@@ -126,9 +127,9 @@ class MarketCapitalization(Resource):
 class EnterpriseValueCalculation(Resource):
     def get(self, company, method):
 
-        last_date_forecast = request.args.get('last_date_forecast')
-        risk_free_interest_rate = request.args.get('risk_free_interest_rate')
-        market_risk_premium = request.args.get('market_risk_premium')
+        last_date_forecast = parser.parse(request.args.get('last_date_forecast'))
+        risk_free_interest_rate = float(request.args.get('risk_free_interest_rate'))
+        market_risk_premium = float(request.args.get('market_risk_premium'))
 
         enterpriseValueCalculator = methods[method].getInstance()(company, last_date_forecast, risk_free_interest_rate,
                                                                   market_risk_premium)
