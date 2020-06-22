@@ -125,7 +125,7 @@ class CompanyValues:
             print(f"liabilities of company {company} not available within API!")
             traceback.print_exc()
 
-    def get_quarterly_liabilities(self,company:str,as_json = False):
+    def get_quarterly_liabilities(self, company: str, as_json=False):
         try:
             period2 = str(int(time.time()))
             response = requests.get(f"https://query2.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/{company}"
