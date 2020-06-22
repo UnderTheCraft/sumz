@@ -39,7 +39,7 @@ class APV(BaseMethod):
 
         else:
             for date in dates:
-                if date < self.last_date_forecast:
+                if date <= self.last_date_forecast:
                     index = dates.index(date)
                     self.last_date_forecast = date
                     break

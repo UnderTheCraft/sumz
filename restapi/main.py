@@ -1,4 +1,5 @@
-from dateutil import parser
+import datetime
+
 from flask import Flask, jsonify, make_response, request, send_file
 from flask_cors import CORS
 from flask_api import status
@@ -130,7 +131,7 @@ class EnterpriseValueCalculation(Resource):
 
         last_date_forecast = request.args.get('last_date_forecast')
         if last_date_forecast is not None:
-            last_date_forecast = parser.parse(last_date_forecast)
+            last_date_forecast = datetime.strptime(last_date_forecast, "%d/%m/%Y")
         risk_free_interest_rate = request.args.get('risk_free_interest_rate')
         if risk_free_interest_rate is not None:
             risk_free_interest_rate = float(risk_free_interest_rate)
