@@ -102,34 +102,13 @@ class CompanyValues:
             traceback.print_exc()
 
     # get Liablilities (Fremdkapital)
-    def get_yearly_liabilities(self, company: str):
+    def get_liabilities(self,company:str,quarterly = False,as_json = False):
         try:
-            session = HTMLSession()
-            response = session.get(f'https://finance.yahoo.com/quote/{company}/balance-sheet')
+            frequency = "quarterly" if quarterly else "annual"
 
-            root = response.html.find("#Col1-1-Financials-Proxy", first=True)
-            root_table = root.find("div + div")[4]
-            table = root_table.find("div")[2]
-            table_heading = table.find(".D\(tbhg\)", first=True)
-            table_data = table.find(".D\(tbrg\)", first=True)
-            liabilities_row = table_data.find("[data-test='fin-row']")[1]
-
-            total_liabilities = []
-            for i in range(1, 5):
-                total_liabilities.append({"date": datetime.strptime(table_heading.find("span")[i].text, "%m/%d/%Y").date(),
-                                          "value": int(liabilities_row.find("span")[i].text.replace(',', ''))*1000})
-
-            return total_liabilities
-
-        except Exception as e:
-            print(f"liabilities of company {company} not available within API!")
-            traceback.print_exc()
-
-    def get_quarterly_liabilities(self,company:str,as_json = False):
-        try:
             period2 = str(int(time.time()))
             response = requests.get(f"https://query2.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/{company}"
-                                    f"?type=2CquarterlyNetDebt%2CquarterlyTotalLiabilitiesNetMinorityInterest&period1"
+                                    f"?type=2C{frequency}NetDebt%2C{frequency}TotalLiabilitiesNetMinorityInterest&period1"
                                     f"=493590046&period2={period2}&corsDomain=finance.yahoo.com").json()
             result = response["timeseries"]["result"][0]
             dates = [datetime.fromtimestamp(timestamp) for timestamp in result["timestamp"]]

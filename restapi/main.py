@@ -105,14 +105,14 @@ class BetaFactor(Resource):
 @application.route("/getYearlyLiabilities/<string:company>", methods=['GET'])
 class YearlyLiabilities(Resource):
     def get(self, company):
-        response = {"total_liabilities": companyValues.get_yearly_liabilities(company)}
+        response = {"total_liabilities": companyValues.get_liabilities(company,False,True)}
         return make_response(response, status.HTTP_200_OK)
 
 
 @application.route("/getQuarterlyLiabilities/<string:company>", methods=['GET'])
 class QuarterlyLiabilities(Resource):
     def get(self, company):
-        response = {"total_liabilities": companyValues.get_quarterly_liabilities(company, True)}
+        response = {"total_liabilities": companyValues.get_liabilities(company, True,True)}
         return make_response(response, status.HTTP_200_OK)
 
 
