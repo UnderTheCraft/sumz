@@ -145,6 +145,6 @@ class EnterpriseValueCalculation(Resource):
 @application.route("/getStockChart/<string:company>", methods=['GET'])
 class StockChart(Resource):
     def get(self, company):
-        chart_values = companyValues.get_stock_chart(company)
-        return make_response(chart_values, status.HTTP_200_OK)
+        response = {"dataPoints": companyValues.get_stock_chart(company)}
+        return make_response(response, status.HTTP_200_OK)
         # return make_response(chart_image, status.HTTP_200_OK)
