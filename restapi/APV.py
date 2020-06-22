@@ -75,6 +75,9 @@ class APV(BaseMethod):
     def getDebt(self):
 
         quarterly_liabilites = self.companyValues.get_liabilities(self.company, quarterly=True, as_json=True)
+
+        if self.last_date_forecast is None:
+            last_liability = quarterly_liabilites[-1]
         for liability in quarterly_liabilites:
             if liability["date"] <= self.last_date_forecast:
                 last_liability = liability
@@ -96,6 +99,7 @@ class APV(BaseMethod):
 
         additionalVaules = {"Number of values used for forecast": self.number_of_values_for_forecast,
                             "Date of last used past value": self.last_date_forecast,
+                            "Date of debt used":self.last_date_debt,
                             "Currency": self.currency,
                             "recommendation":"BUY"
                             }
