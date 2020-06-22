@@ -36,11 +36,14 @@ class APV(BaseMethod):
         if self.last_date_forecast is None:
             self.last_date_forecast = dates[0]
             past_fcfs = fcfs[0:20]
-        else:
 
 
 
 
+
+
+
+        past_fcfs.reverse()
 
         self.number_of_values_for_forecast = len(past_fcfs)
 
