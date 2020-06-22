@@ -123,7 +123,7 @@ class MarketCapitalization(Resource):
 
 
 @application.route("/getCorporateValue/<string:company>/<string:method>")
-@application.route("/getCorporateValue/<string:company>/<string:method>/?last_date_forecast=<string:last_date_forecast"
+@application.route("/getCorporateValue/<string:company>/<string:method>/last_date_forecast=<string:last_date_forecast"
                    ">&risk_free_interest_rate=<float:risk_free_interest_rate>&market_risk_premium=<float"
                    ":market_risk_premium>",
                    methods=['GET'])
