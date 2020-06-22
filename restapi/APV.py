@@ -76,7 +76,7 @@ class APV(BaseMethod):
 
         quarterly_liabilites = self.companyValues.get_liabilities(self.company, quarterly=True, as_json=True)
         for liability in quarterly_liabilites:
-            if liability["date"] < self.last_date_forecast:
+            if liability["date"] <= self.last_date_forecast:
                 last_liability = liability
             else:
                 break
