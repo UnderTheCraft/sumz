@@ -75,9 +75,10 @@ class APV(BaseMethod):
 
         quarterly_liabilites = self.companyValues.get_quarterly_liabilities(self.company, as_json=True)
         for liability in quarterly_liabilites:
-            print(liability["date"])
+            print(f"liability['date'] --> {liability['date']}")
+            print(f"last_date --> {self.last_date_forecast}")
             try:
-                liability_date = datetime.strptime(liability["date"], "%a, %b %m %Y %H:%M:%S %Z")
+                liability_date = datetime.strptime(liability["date"], "%Y-%m-%d %H:%M:%S")
                 last_date = datetime.strptime(self.last_date_forecast, "%d.%m.%Y")
                 print(f"if {liability_date} < {last_date}: ")
                 print(liability_date < last_date)
