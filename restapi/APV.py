@@ -65,7 +65,10 @@ class APV(BaseMethod):
         for i in range(len(forecast_fcfs_year) - 1):
             GKu = GKu + (forecast_fcfs_year[i] / ((1 + equity_interest) ** (i+1)))
 
-        GKu = forecast_fcfs_year[-1] / (equity_interest * ((1 + equity_interest) ** len(forecast_fcfs_year)))
+        print("GKu without residual value " + str(GKu))
+
+        GKu = GKu + forecast_fcfs_year[-1] / (equity_interest * ((1 + equity_interest) ** len(forecast_fcfs_year)))
+        print("GKu with residual value " + str(GKu))
 
         return GKu
 
