@@ -37,11 +37,13 @@ class APV(BaseMethod):
             self.last_date_forecast = dates[0]
             past_fcfs = fcfs[0:20]
 
-
-
-
-
-
+        else:
+            for date in dates:
+                if date < self.last_date_forecast:
+                    index = dates.index(date)
+                    self.last_date_forecast = date
+                    break
+            past_fcfs = fcfs[index:index+20]
 
         past_fcfs.reverse()
 
