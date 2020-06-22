@@ -82,7 +82,7 @@ class APV(BaseMethod):
                 break
 
         self.last_date_debt = last_liability["date"]
-
+        print(f"last date debt: {self.last_date_debt} and liability: {last_liability['liability']}")
         return last_liability["liability"]
 
     def calculateEquityInterest(self):
