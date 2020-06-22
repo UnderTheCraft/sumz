@@ -1,5 +1,4 @@
-import datetime
-
+from datetime import datetime
 from flask import Flask, jsonify, make_response, request, send_file
 from flask_cors import CORS
 from flask_api import status
