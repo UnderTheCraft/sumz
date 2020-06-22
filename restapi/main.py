@@ -131,8 +131,12 @@ class EnterpriseValueCalculation(Resource):
         last_date_forecast = request.args.get('last_date_forecast')
         if last_date_forecast is not None:
             last_date_forecast = parser.parse(last_date_forecast)
-        risk_free_interest_rate = float(request.args.get('risk_free_interest_rate'))
-        market_risk_premium = float(request.args.get('market_risk_premium'))
+        risk_free_interest_rate = request.args.get('risk_free_interest_rate')
+        if risk_free_interest_rate is not None:
+            risk_free_interest_rate = float(risk_free_interest_rate)
+        market_risk_premium = request.args.get('market_risk_premium')
+        if market_risk_premium is not None:
+            market_risk_premium = float(market_risk_premium)
 
         enterpriseValueCalculator = methods[method].getInstance()(company, last_date_forecast, risk_free_interest_rate,
                                                                   market_risk_premium)
