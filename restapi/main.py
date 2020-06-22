@@ -130,7 +130,7 @@ class EnterpriseValueCalculation(Resource):
 
         last_date_forecast = request.args.get('last_date_forecast')
         if last_date_forecast is not None:
-            last_date_forecast = datetime.strptime(last_date_forecast, "%d/%m/%Y")
+            last_date_forecast = datetime.strptime(last_date_forecast, "%d.%m.%Y")
         risk_free_interest_rate = request.args.get('risk_free_interest_rate')
         if risk_free_interest_rate is not None:
             risk_free_interest_rate = float(risk_free_interest_rate)
