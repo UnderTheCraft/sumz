@@ -143,8 +143,12 @@ class CompanyValues:
 
     def get_stock_chart(self, company: str):
         try:
+            interval = '1d'
+            range = '5y'
+
             session = HTMLSession()
-            response = session.get(f'https://query1.finance.yahoo.com/v8/finance/chart/{company}?region=US&interval=1wk&range=1y')
+            response = session.get(f'https://query1.finance.yahoo.com/v8/finance/chart/{company}'
+                                   f'?region=US&interval={interval}&range={range}')
             response = json.loads(response.text)
 
             timestamps = response["chart"]["result"][0]["timestamp"]
