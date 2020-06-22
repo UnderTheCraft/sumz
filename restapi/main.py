@@ -122,14 +122,11 @@ class MarketCapitalization(Resource):
         return make_response(response, status.HTTP_200_OK)
 
 
-@application.route("/getCorporateValue/<string:company>/<string:method>?last_date_forecast=<string:last_date_forecast"
-                   ">&risk_free_interest_rate=<float:risk_free_interest_rate>&market_risk_premium=<float"
+@application.route("/getCorporateValue/<string:company>/<string:method>?last_date_forecast=<string:last_date_forecast>"
+                   "&risk_free_interest_rate=<float:risk_free_interest_rate>&market_risk_premium=<float"
                    ":market_risk_premium>",methods=['GET'])
 class EnterpriseValueCalculation(Resource):
-    def get(self, company, method):
-        last_date_forecast = request.args.get('last_date_forecast')
-        risk_free_interest_rate = request.args.get('risk_free_interest_rate')
-        market_risk_premium = request.args.get('market_risk_premium')
+    def get(self, company, method, last_date_forecast, risk_free_interest_rate, market_risk_premium):
 
         enterpriseValueCalculator = methods[method].getInstance()(company, last_date_forecast, risk_free_interest_rate,
                                                                   market_risk_premium)

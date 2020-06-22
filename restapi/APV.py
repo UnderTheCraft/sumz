@@ -77,6 +77,8 @@ class APV(BaseMethod):
 
         additionalVaules = {"Number of values used for forecast": self.number_of_values_for_forecast,
                             "Date of last used past value": self.last_date_forecast,
-                            "Currency": self.currency}
+                            "Currency": self.currency,
+                            "recommendation":"BUY"
+                            }
 
         return additionalVaules
