@@ -143,7 +143,7 @@ class CompanyValues:
 
     def get_stock_chart(self, company: str):
         try:
-            interval = '1d'
+            interval = '1wk'
             range = '5y'
 
             session = HTMLSession()
