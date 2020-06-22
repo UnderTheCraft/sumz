@@ -50,7 +50,7 @@ class APV(BaseMethod):
         print("FCF year" + str(forecast_fcfs_year))
 
         GKu = 0
-        equity_interest = self.calculateEquityInterest()/100
+        equity_interest = self.calculateEquityInterest()
         print("Equityinterest " + str(equity_interest))
 
         for i in range(len(forecast_fcfs_year) - 1):
@@ -71,7 +71,7 @@ class APV(BaseMethod):
                           (self.marketValues.get_market_risk_premium() * \
                            self.companyValues.get_beta_factor(self.company))
 
-        return equity_interest
+        return equity_interest/100
 
     def getAdditionalValues(self):
 
