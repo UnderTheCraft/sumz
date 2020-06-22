@@ -127,7 +127,10 @@ class MarketCapitalization(Resource):
 class EnterpriseValueCalculation(Resource):
     def get(self, company, method):
 
-        last_date_forecast = parser.parse(request.args.get('last_date_forecast'))
+
+        last_date_forecast = request.args.get('last_date_forecast')
+        if last_date_forecast is not None:
+            last_date_forecast = parser.parse(last_date_forecast)
         risk_free_interest_rate = float(request.args.get('risk_free_interest_rate'))
         market_risk_premium = float(request.args.get('market_risk_premium'))
 
