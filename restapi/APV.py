@@ -72,6 +72,19 @@ class APV(BaseMethod):
         return 0
 
     def getDebt(self):
+
+        quarterly_liabilites = self.companyValues.get_quarterly_liabilities(self.company, as_json=True)
+        for liability in quarterly_liabilites:
+            print(f"liability['date'] --> {liability['date']}")
+            print(f"last_date --> {self.last_date_forecast}")
+            try:
+                liability_date = datetime.strptime(liability["date"], "%Y-%m-%d %H:%M:%S")
+                last_date = datetime.strptime(self.last_date_forecast, "%d.%m.%Y")
+                print(f"if {liability_date} < {last_date}: ")
+                print(liability_date < last_date)
+            except Exception as e:
+                print("comparision not possible")
+
         return 0
 
     def calculateEquityInterest(self):
