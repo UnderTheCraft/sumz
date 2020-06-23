@@ -13,6 +13,7 @@ class ARIMAForecast:
         reversed(df)
         model = SARIMAX(df, order=(1, 0, 0), seasonal_order=(0, 1, 1, 4), seasonal=True)
         trained_model = model.fit()
+        print(trained_model.summary())
         forecast = trained_model.forecast(forecast_length)
 
         return forecast
