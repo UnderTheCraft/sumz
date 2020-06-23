@@ -73,7 +73,7 @@ class CashFlows(Resource):
 @application.route("/getCashFlowForecast/<string:company>/prediction_length=<int:prediction_length>", methods=['GET'])
 class CashFlowForecast(Resource):
     def get(self, company, prediction_length):
-        dates, fcfs, currency = CompanyValues().get_cash_flows_array(company)
+        dates, fcfs, currency = CompanyValues().get_cashflows_from_api(company)
 
         forecast = ARIMAForecast.make_forecast(fcfs[0:16], prediction_length)
 

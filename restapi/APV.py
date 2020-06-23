@@ -32,7 +32,7 @@ class APV(BaseMethod):
 
     def calculatePresentValueOfCashFlow(self):
 
-        dates, fcfs, currency = CompanyValues().get_cash_flows_array(self.company)
+        dates, fcfs, currency = CompanyValues().get_cashflows_from_api(self.company)
 
         self.currency = currency
 
@@ -104,7 +104,7 @@ class APV(BaseMethod):
 
         additionalVaules = {"Number of values used for forecast": self.number_of_values_for_forecast,
                             "Date of last used past value": self.last_date_forecast,
-                            "Date of debt used":self.last_date_debt,
+                            "Date of debt used": self.last_date_debt,
                             "Currency": self.currency,
                             "recommendation": self.getRecommendation()
                             }

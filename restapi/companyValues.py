@@ -25,10 +25,10 @@ class CompanyValues:
         if company.casefold() in local_companies:
             return self.get_from_local(company)
         elif company in api_companies:
-            return self.get_from_api(company)
+            return self.get_cashflows_from_api(company,True)
         else:
             try:
-                cash_flows = self.get_from_api(company)
+                cash_flows = self.get_cashflows_from_api(company,True)
                 return cash_flows
             except Exception as e:
                 traceback.print_exc()
@@ -49,22 +49,7 @@ class CompanyValues:
             print("company not found locally")
             traceback.print_exc()
 
-    # Get from an API
-    def get_from_api(self, company: str):
-        print("get from API")
-
-        dates, fcfs, currency = self.get_cash_flows_array(company)
-
-        result_df = pd.DataFrame()
-        result_df["date"] = dates
-        result_df["FCF"] = fcfs
-
-        result_json = [{"Free Cash Flows": result_df.to_dict(orient='records')}, {"currency": currency}]
-
-        return result_json
-
-
-    def get_cash_flows_array(self, company):
+    def get_cash_flows_from_api(self, company, as_json = False):
 
         try:
 
@@ -83,7 +68,12 @@ class CompanyValues:
             dates = [parser.parse(rawDate.text) for rawDate in raw_dates]
             fcfs = [int(float(rawFCF.text[:-1]) * 10 ** self.__abbrevationToNumber[rawFCF.text[-1]]) for rawFCF in raw_fcfs]
 
-            return dates,fcfs,currency
+            if as_json:
+                result_json = [{'date': date, 'FCF': fcf} for date, fcf in zip(dates, fcfs)]
+                return [{"Free Cash Flows": result_json}, {"currency": currency}]
+            else:
+                return dates,fcfs,currency
+
 
         except Exception as e:
             print(f"company not available within API!")
