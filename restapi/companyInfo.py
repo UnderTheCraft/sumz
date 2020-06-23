@@ -7,7 +7,7 @@ class CompanyInfo:
                                       "WBA"
                                       "TRV"]  # ,"DOW","UTX"]
 
-        self.self.__all_companies_long = ["Apple", "Microsoft", "Johnson & Johnson", "Walmart", "Visa",
+        self.__all_companies_long = ["Apple", "Microsoft", "Johnson & Johnson", "Walmart", "Visa",
                                      "JP Morgan Chase & Co", "Procter & Gamble", "UnitedHealth Group", "The Home Depot",
                                      "Intel", "Verizon Communications", "The Walt Disney Co",
                                      "Merck", "Exxon Mobil",
