@@ -75,7 +75,7 @@ class CashFlowForecast(Resource):
     def get(self, company, prediction_length):
         dates, fcfs, currency = CompanyValues().get_cash_flows(company)
 
-        forecast = ARIMAForecast().make_forecast(fcfs[0:16], prediction_length)
+        forecast = ARIMAForecast().make_forecast(fcfs[0:20].reverse(), prediction_length)
 
         forecast_df = pd.DataFrame()
         forecast_df["fcf"] = forecast
