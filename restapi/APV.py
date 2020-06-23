@@ -5,6 +5,8 @@ from restapi.marketValues import MarketValues
 from datetime import datetime
 import numpy as np
 
+from restapi.recommendation import Recommendation
+
 
 class APV(BaseMethod):
 
@@ -104,7 +106,11 @@ class APV(BaseMethod):
                             "Date of last used past value": self.last_date_forecast,
                             "Date of debt used":self.last_date_debt,
                             "Currency": self.currency,
-                            "recommendation":"BUY"
+                            "recommendation": self.getRecommendation()
                             }
 
         return additionalVaules
+
+    def getRecommendation(self):
+
+        return Recommendation.BUY
