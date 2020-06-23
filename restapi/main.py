@@ -53,8 +53,8 @@ class Methods(Resource):
 class CashFlows(Resource):
     def get(self, company):
         try:
-            company_cash_flows = companyValues.get_cash_flows_json(company)
-            company_cash_flows.append({"company": company.casefold()})
+            company_cash_flows = companyValues.get_cash_flows(company.upper(),True)
+            company_cash_flows.append({"company": company})
             response = make_response(jsonify(company_cash_flows), status.HTTP_200_OK)
             response.headers['content-type'] = 'application/json'
             print("returning response object")
@@ -73,7 +73,7 @@ class CashFlows(Resource):
 @application.route("/getCashFlowForecast/<string:company>/prediction_length=<int:prediction_length>", methods=['GET'])
 class CashFlowForecast(Resource):
     def get(self, company, prediction_length):
-        dates, fcfs, currency = CompanyValues().get_cash_flows_from_api(company)
+        dates, fcfs, currency = CompanyValues().get_cash_flows(company)
 
         forecast = ARIMAForecast().make_forecast(fcfs[0:16], prediction_length)
 

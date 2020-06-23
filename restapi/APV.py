@@ -32,7 +32,7 @@ class APV(BaseMethod):
 
     def calculatePresentValueOfCashFlow(self):
 
-        dates, fcfs, currency = CompanyValues().get_cash_flows_from_api(self.company)
+        dates, fcfs, currency = CompanyValues().get_cash_flows(self.company)
 
         self.currency = currency
 

@@ -17,39 +17,8 @@ class CompanyValues:
         self.__companies = CompanyInfo()
         self.__abbrevationToNumber = {'K': 3, 'M': 6, 'B': 9, 'T': 12}
 
-    # get cash flows of companies
-    def get_cash_flows_json(self, company: str):
-        local_companies = self.__companies.get_local_companies()
-        api_companies = self.__companies.get_api_companies()
 
-        if company.casefold() in local_companies:
-            return self.get_from_local(company)
-        elif company in api_companies:
-            return self.get_cash_flows_from_api(company,True)
-        else:
-            try:
-                cash_flows = self.get_cash_flows_from_api(company,True)
-                return cash_flows
-            except Exception as e:
-                traceback.print_exc()
-                raise NotImplementedError(f"Company {company} not available locally and within API")
-
-    # Get from local files
-    def get_from_local(self, company: str):
-        base_dir = "https://cloud-cube-eu.s3.amazonaws.com/mm6r5v7viahe/public"
-
-        try:
-            path = f"{base_dir}/{company.casefold()}.csv"
-            result_df = pd.read_csv(path, sep=";")
-            result_json = result_df.to_dict(orient='records')
-            result_json.append({"currency": "EUR"})
-            return result_json
-
-        except FileNotFoundError as e:
-            print("company not found locally")
-            traceback.print_exc()
-
-    def get_cash_flows_from_api(self, company, as_json = False):
+    def get_cash_flows(self, company, as_json = False):
 
         try:
 
@@ -74,9 +43,8 @@ class CompanyValues:
             else:
                 return dates,fcfs,currency
 
-
         except Exception as e:
-            print(f"company not available within API!")
+            print(f"{company} not available within API!")
             traceback.print_exc()
 
     # get beta factor
