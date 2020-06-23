@@ -98,7 +98,7 @@ class CompanyValues:
 
             period2 = str(int(time.time()))
             response = requests.get(f"https://query2.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/{company}"
-                                    f"?type=2C{frequency}NetDebt%2C{frequency}TotalLiabilitiesNetMinorityInterest&period1"
+                                    f"?type=%2C{frequency}TotalLiabilitiesNetMinorityInterest&period1"
                                     f"=493590046&period2={period2}&corsDomain=finance.yahoo.com").json()
             result = response["timeseries"]["result"][0]
             dates = [datetime.fromtimestamp(timestamp) for timestamp in result["timestamp"]]
