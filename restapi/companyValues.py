@@ -25,10 +25,10 @@ class CompanyValues:
         if company.casefold() in local_companies:
             return self.get_from_local(company)
         elif company in api_companies:
-            return self.get_cashflows_from_api(company,True)
+            return self.get_cash_flows_from_api(company,True)
         else:
             try:
-                cash_flows = self.get_cashflows_from_api(company,True)
+                cash_flows = self.get_cash_flows_from_api(company,True)
                 return cash_flows
             except Exception as e:
                 traceback.print_exc()
