@@ -10,20 +10,28 @@ from restapi.recommendation import Recommendation
 
 class APV(BaseMethod):
 
-    def __init__(self, company: str = None, last_date_forecast: datetime = None, risk_free_interest_rate: float = None,
+    def __init__(self, company: str = None,
+                 last_date_forecast: datetime = None,
+                 risk_free_interest_rate: float = None,
                  market_risk_premium: float = None):
+        """ Die benötigten Parameter werden festgelegt """
+
         self.company = company
         self.last_date_forecast = last_date_forecast
         self.last_date_debt = None
         self.companyValues = CompanyValues()
         self.marketValues = MarketValues()
 
+        # Wenn vom Anwender spezifische Parameter verwendet werden, werden diese in dem marketValues Objekt überschrieben
+        # und werden bei Kalkulationen später verwendet
         if risk_free_interest_rate is not None:
             self.marketValues.set_risk_free_interest(risk_free_interest_rate)
         if market_risk_premium is not None:
             self.marketValues.set_market_risk_premium(market_risk_premium)
 
     def calculateEnterpriseValue(self):
+        """ Hauptmethode für die Berechnung des Unternehmenswertes """
+
         enterprise_value = self.calculatePresentValueOfCashFlow() + \
                            self.calculatePresentValueOfTaxShield() - \
                            self.getDebt()
@@ -31,6 +39,7 @@ class APV(BaseMethod):
         return enterprise_value
 
     def calculatePresentValueOfCashFlow(self):
+        """ Berechnung des Barwertes zukünftiger Cashflows durch Abzinsung """
 
         dates, fcfs, currency = CompanyValues().get_cash_flows(self.company)
 
@@ -46,16 +55,16 @@ class APV(BaseMethod):
                     index = dates.index(date)
                     self.last_date_forecast = date
                     break
-            past_fcfs = fcfs[index:index+20]
+            past_fcfs = fcfs[index:index + 20]
 
         past_fcfs.reverse()
 
         self.number_of_values_for_forecast = len(past_fcfs)
 
-        print("Past fcfs "+str(past_fcfs))
+        print("Past fcfs " + str(past_fcfs))
 
         forecast_fcfs_quarterly = ARIMAForecast().make_forecast(past_fcfs, 20)
-        print("FCF quarterly "+str(forecast_fcfs_quarterly))
+        print("FCF quarterly " + str(forecast_fcfs_quarterly))
 
         forecast_fcfs_year = np.sum(np.array_split(forecast_fcfs_quarterly, 5), axis=1)
         print("FCF year" + str(forecast_fcfs_year))
@@ -65,7 +74,7 @@ class APV(BaseMethod):
         print("Equityinterest " + str(equity_interest))
 
         for i in range(len(forecast_fcfs_year) - 1):
-            GKu = GKu + (forecast_fcfs_year[i] / ((1 + equity_interest) ** (i+1)))
+            GKu = GKu + (forecast_fcfs_year[i] / ((1 + equity_interest) ** (i + 1)))
 
         print("GKu without residual value " + str(GKu))
 
@@ -78,12 +87,13 @@ class APV(BaseMethod):
         return 0
 
     def getDebt(self):
+        """ Gibt das für ein bestimmtes Datum angegebenene quartalsweise Fremdkapital eines Unternehmens zurück """
 
-        quarterly_liabilites = self.companyValues.get_liabilities(self.company, quarterly=True, as_json=True)
+        quarterly_liabilities = self.companyValues.get_liabilities(self.company, quarterly=True, as_json=True)
 
         if self.last_date_forecast is None:
-            last_liability = quarterly_liabilites[-1]
-        for liability in quarterly_liabilites:
+            last_liability = quarterly_liabilities[-1]
+        for liability in quarterly_liabilities:
             if liability["date"] <= self.last_date_forecast:
                 last_liability = liability
             else:
@@ -94,13 +104,16 @@ class APV(BaseMethod):
         return last_liability["liability"]
 
     def calculateEquityInterest(self):
+        """ Berechnung der Eigenkapitalverzinsung """
+
         equity_interest = self.marketValues.get_risk_free_interest() + \
                           (self.marketValues.get_market_risk_premium() * \
                            self.companyValues.get_beta_factor(self.company))
 
-        return equity_interest/100
+        return equity_interest / 100
 
     def getAdditionalValues(self):
+        """ Zusätzliche Parameter, welche zur Angabe des Unternehmenswerte benötigt werden """
 
         additionalVaules = {"Number of values used for forecast": self.number_of_values_for_forecast,
                             "Date of last used past value": self.last_date_forecast,
@@ -111,6 +124,17 @@ class APV(BaseMethod):
 
         return additionalVaules
 
-    def getRecommendation(self):
+    def getRecommendation(self, companyValue: float, market_capitalization: float, percentage_deviation: float = 5):
+        """ Methode für die Berechnung der Kaufempfehlung anhand berechnetem Wert und realer Marktkapitalisierung """
 
-        return Recommendation.BUY
+        # Untergrenze der Bewertung -> Liegt der berechnete Unternehmenswert darunter wird verkauft!
+        floor = (market_capitalization / 100) * (100 - percentage_deviation)
+        # Obergrenze der Bewertung -> Liegt der berechnete Unternehmenswert darüber wird gekauft!
+        ceiling = (market_capitalization / 100) * (100 + percentage_deviation)
+
+        if companyValue <= floor:
+            return Recommendation.SELL
+        elif companyValue >= ceiling:
+            return Recommendation.BUY
+        else:
+            return Recommendation.HOLD

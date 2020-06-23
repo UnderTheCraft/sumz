@@ -2,5 +2,6 @@ from enum import Enum
 
 class Recommendation(Enum):
 
-    BUY = "BUY"
-    DONT_BUY = "DON'T BUY"
+    BUY = "Buy"
+    HOLD = "Hold"
+    SELL = "Sell"
