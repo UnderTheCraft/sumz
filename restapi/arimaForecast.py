@@ -1,7 +1,6 @@
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 import pandas as pd
 
-from restapi.companyValues import CompanyValues
 
 
 class ARIMAForecast:

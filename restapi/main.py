@@ -4,11 +4,11 @@ from flask_cors import CORS
 from flask_api import status
 from flask_restx import Api, Resource
 
-from restapi.APVInformation import APVInformation
-from restapi.arimaForecast import ARIMAForecast
-from restapi.companyInfo import CompanyInfo
-from restapi.companyValues import CompanyValues
-from restapi.marketValues import MarketValues
+from APVInformation import APVInformation
+from arimaForecast import ARIMAForecast
+from companyInfo import CompanyInfo
+from companyValues import CompanyValues
+from marketValues import MarketValues
 
 import pandas as pd
 import numpy as np
@@ -74,8 +74,9 @@ class CashFlows(Resource):
 class CashFlowForecast(Resource):
     def get(self, company, prediction_length):
         dates, fcfs, currency = CompanyValues().get_cash_flows(company)
-
-        forecast = ARIMAForecast().make_forecast(fcfs[0:20].reverse(), prediction_length)
+        fcfs = fcfs[0:20]
+        fcfs.reverse()
+        forecast = ARIMAForecast().make_forecast(fcfs, prediction_length)
 
         forecast_df = pd.DataFrame()
         forecast_df["fcf"] = forecast
