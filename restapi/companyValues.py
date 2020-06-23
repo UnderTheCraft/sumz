@@ -2,7 +2,7 @@ from requests_html import HTMLSession
 import requests
 import pandas as pd
 import traceback
-from companyInfo import CompanyInfo
+from restapi.companyInfo import CompanyInfo
 from dateutil import parser
 from datetime import datetime
 import time

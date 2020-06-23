@@ -1,11 +1,11 @@
-from baseMethod import BaseMethod
-from arimaForecast import ARIMAForecast
-from companyValues import CompanyValues
-from marketValues import MarketValues
+from restapi.baseMethod import BaseMethod
+from restapi.arimaForecast import ARIMAForecast
+from restapi.companyValues import CompanyValues
+from restapi.marketValues import MarketValues
 from datetime import datetime
 import numpy as np
 
-from recommendation import Recommendation
+from restapi.recommendation import Recommendation
 
 
 class APV(BaseMethod):

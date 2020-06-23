@@ -1,4 +1,4 @@
-from APV import APV
+from restapi.APV import APV
 
 
 class APVInformation:
