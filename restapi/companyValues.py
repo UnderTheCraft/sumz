@@ -52,7 +52,7 @@ class CompanyValues:
 
         try:
             period2 = str(int(time.time()))
-            response = requests.get(f"https://query1.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/{company}?type=%20%2CquarterlyFreeCashFlow&period1=493590046&period2={period2}&corsDomain=finance.yahoo.com").json()
+            response = requests.get(f"https://query1.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/{company}?type=%20%2CannualFreeCashFlow&period1=493590046&period2={period2}&corsDomain=finance.yahoo.com").json()
             result = response["timeseries"]["result"][0]
             dates = [datetime.fromtimestamp(timestamp) for timestamp in result["timestamp"]]
             cash_flow_objects = result["quarterlyFreeCashFlow"]
