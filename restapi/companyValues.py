@@ -47,6 +47,24 @@ class CompanyValues:
             print(f"{company} not available within API!")
             traceback.print_exc()
 
+
+    def get_annual_cash_flow(self, company):
+
+        try:
+            period2 = str(int(time.time()))
+            response = requests.get(f"https://query1.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/{company}?type=%20%2CquarterlyFreeCashFlow&period1=493590046&period2={period2}&corsDomain=finance.yahoo.com")
+            result = response["timeseries"]["result"][0]
+            dates = [datetime.fromtimestamp(timestamp) for timestamp in result["timestamp"]]
+            cash_flow_objects = result["quarterlyFreeCashFlow"]
+
+            cash_flows = [cash_flow_object["reportedValue"]["raw"] for cash_flow_object in cash_flow_objects]
+
+            return [{'date': date, 'liability': cash_flow} for date, cash_flow in zip(dates, cash_flows)]
+
+        except Exception as e:
+            print(f"{company} not available within API!")
+            traceback.print_exc()
+
     # get beta factor
     def get_beta_factor(self, company: str):
         try:
