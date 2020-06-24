@@ -59,7 +59,7 @@ class CompanyValues:
 
             cash_flows = [cash_flow_object["reportedValue"]["raw"] for cash_flow_object in cash_flow_objects]
 
-            return [{'date': date, 'liability': cash_flow} for date, cash_flow in zip(dates, cash_flows)]
+            return [{'date': date, 'cash flow': cash_flow} for date, cash_flow in zip(dates, cash_flows)]
 
         except Exception as e:
             print(f"{company} not available within API!")
