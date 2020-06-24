@@ -55,7 +55,7 @@ class CompanyValues:
             response = requests.get(f"https://query1.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/{company}?type=%20%2CannualFreeCashFlow&period1=493590046&period2={period2}&corsDomain=finance.yahoo.com").json()
             result = response["timeseries"]["result"][0]
             dates = [datetime.fromtimestamp(timestamp) for timestamp in result["timestamp"]]
-            cash_flow_objects = result["quarterlyFreeCashFlow"]
+            cash_flow_objects = result["annualFreeCashFlow"]
 
             cash_flows = [cash_flow_object["reportedValue"]["raw"] for cash_flow_object in cash_flow_objects]
 
