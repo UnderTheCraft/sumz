@@ -111,10 +111,10 @@ class YearlyLiabilities(Resource):
 
 
 @application.route("/getAnnualCashFlows/<string:company>", methods=['GET'])
-class YearlyLiabilities(Resource):
+class AnnualFreeCashFlows(Resource):
     def get(self, company):
         response = companyValues.get_annual_cash_flow(company)
-        return make_response(response, status.HTTP_200_OK)
+        return response
 
 @application.route("/getQuarterlyLiabilities/<string:company>", methods=['GET'])
 class QuarterlyLiabilities(Resource):
