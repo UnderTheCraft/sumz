@@ -121,7 +121,7 @@ class CompanyValues:
         try:
             from requests_html import HTMLSession
             session = HTMLSession()
-            response = session.get("https://finance.yahoo.com/quote/AAPL")
+            response = session.get(f"https://finance.yahoo.com/quote/{company}")
 
             share_value = response.html.find('[class="Trsdu(0.3s) Fw(b) Fz(36px) Mb(-4px) D(ib)"]', first=True).text
 

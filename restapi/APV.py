@@ -178,8 +178,8 @@ class APV(BaseMethod):
         ceiling = (self.market_capitalization / 100) * (100 + percentage_deviation)
 
         if companyValue <= floor:
-            return Recommendation.SELL
+            return Recommendation.SELL.value
         elif companyValue >= ceiling:
-            return Recommendation.BUY
+            return Recommendation.BUY.value
         else:
-            return Recommendation.HOLD
+            return Recommendation.HOLD.value
