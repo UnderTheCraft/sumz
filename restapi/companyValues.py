@@ -15,15 +15,15 @@ class CompanyValues:
         self.__abbrevationToNumber = {'K': 3, 'M': 6, 'B': 9, 'T': 12}
         self.stock_chart_interval = '1wk'
         self.stock_chart_range = '5y'
+        self.__session = HTMLSession()
 
 
     def get_cash_flows(self, company, as_json = False):
         """ Beziehen der quartalsweisen CashFlows von der yCharts Website mithilfe einer HTML Session"""
         try:
-            session = HTMLSession()
 
             # TODO hier könnte ne tryExcept hin, falls z.b. keine Verbindung aufgebaut werden kann
-            response = session.get(f'https://ycharts.com/companies/{company}/free_cash_flow')
+            response = self.__session.get(f'https://ycharts.com/companies/{company}/free_cash_flow')
 
             print(f"The headers of the requests are:\n{response.headers}")
 
@@ -65,8 +65,7 @@ class CompanyValues:
     # get beta factor
     def get_beta_factor(self, company: str):
         try:
-            session = HTMLSession()
-            response = session.get(f'https://finance.yahoo.com/quote/{company}')
+            response = self.__sessionget(f'https://finance.yahoo.com/quote/{company}')
             beta_factor = response.html.find("[data-test='BETA_5Y-value']", first=True).text
             return float(beta_factor)
 
@@ -101,8 +100,7 @@ class CompanyValues:
     # Markkapitalisierung
     def get_market_capitalization(self, company: str):
         try:
-            session = HTMLSession()
-            response = session.get(f'https://finance.yahoo.com/quote/{company}')
+            response = self.__session.get(f'https://finance.yahoo.com/quote/{company}')
             market_cap = response.html.find("[data-test=MARKET_CAP-value]", first=True).text
 
             number = market_cap[:-1]
@@ -118,9 +116,7 @@ class CompanyValues:
 
     def get_amount_shares(self, company: str):
         try:
-
-            session = HTMLSession()
-            response = session.get(f"https://finance.yahoo.com/quote/{company}")
+            response = self.__session.get(f"https://finance.yahoo.com/quote/{company}")
 
             share_value = response.html.find('[class="Trsdu(0.3s) Fw(b) Fz(36px) Mb(-4px) D(ib)"]', first=True).text
 
