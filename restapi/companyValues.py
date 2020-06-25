@@ -125,7 +125,7 @@ class CompanyValues:
 
             share_value = response.html.find('[class="Trsdu(0.3s) Fw(b) Fz(36px) Mb(-4px) D(ib)"]', first=True).text
 
-            amount_shares = self.get_market_capitalization(company)/share_value
+            amount_shares = self.get_market_capitalization(company)/float(share_value)
 
             return amount_shares
 
