@@ -11,7 +11,7 @@ from restapi.recommendation import Recommendation
 
 class APV(BaseMethod):
 
-    def __init__(self, company: str = None, last_date: datetime = None,
+    def __init__(self, company: str, last_date: datetime,
                  risk_free_interest_rate: float = None, market_risk_premium: float = None):
         """ Die benötigten Parameter werden festgelegt """
 
