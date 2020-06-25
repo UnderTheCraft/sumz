@@ -13,12 +13,13 @@ class CompanyValues:
     def __init__(self):
         self.__companies = CompanyInfo()
         self.__abbrevationToNumber = {'K': 3, 'M': 6, 'B': 9, 'T': 12}
+        self.stock_chart_interval = '1wk'
+        self.stock_chart_range = '5y'
 
 
     def get_cash_flows(self, company, as_json = False):
-
+        """ Beziehen der quartalsweisen CashFlows von der yCharts Website mithilfe einer HTML Session"""
         try:
-
             session = HTMLSession()
 
             # TODO hier könnte ne tryExcept hin, falls z.b. keine Verbindung aufgebaut werden kann
@@ -38,15 +39,14 @@ class CompanyValues:
                 result_json = [{'date': date, 'FCF': fcf} for date, fcf in zip(dates, fcfs)]
                 return [{"Free Cash Flows": result_json}, {"currency": currency}]
             else:
-                return dates,fcfs,currency
+                return dates, fcfs, currency
 
         except Exception as e:
             print(f"{company} not available within API!")
             traceback.print_exc()
 
-
     def get_annual_cash_flow(self, company):
-
+        """ Beziehen der jährlichen CashFlows von yahoo Finance mithilfe einer HTML Session"""
         try:
             period2 = str(int(time.time()))
             response = requests.get(f"https://query1.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/{company}?type=%20%2CannualFreeCashFlow&period1=493590046&period2={period2}&corsDomain=finance.yahoo.com").json()
@@ -75,7 +75,7 @@ class CompanyValues:
             traceback.print_exc()
 
     # get Liablilities (Fremdkapital)
-    def get_liabilities(self,company:str,quarterly = False,as_json = False):
+    def get_liabilities(self, company:str, quarterly = False, as_json = False):
         try:
             frequency = "quarterly" if quarterly else "annual"
 
@@ -118,7 +118,7 @@ class CompanyValues:
 
     def get_amount_shares(self, company: str):
         try:
-            from requests_html import HTMLSession
+
             session = HTMLSession()
             response = session.get(f"https://finance.yahoo.com/quote/{company}")
 
@@ -134,13 +134,9 @@ class CompanyValues:
 
     def get_stock_chart(self, company: str):
         try:
-            interval = '1wk'
-            range = '5y'
-
-            session = HTMLSession()
-            response = session.get(f'https://query1.finance.yahoo.com/v8/finance/chart/{company}'
-                                   f'?region=US&interval={interval}&range={range}')
-            response = json.loads(response.text)
+            response = requests.get(f'https://query1.finance.yahoo.com/v8/finance/chart/{company}'
+                                   f'?region=US&interval={self.stock_chart_interval}'
+                                   f'&range={self.stock_chart_range}').json()
 
             timestamps = response["chart"]["result"][0]["timestamp"]
             indicators = response["chart"]["result"][0]["indicators"]
@@ -149,17 +145,8 @@ class CompanyValues:
             chart_values = [{"x": datetime.fromtimestamp(timestamp), "y": price}
                             for timestamp, price in zip(timestamps, closing_prices)]
 
-            # buffer = BytesIO()
-            # plt.plot(closing_prices)
-            # plt.savefig(buffer)
-            # image = Image.open(buffer)
-
             return chart_values
 
-        except:
+        except Exception as e:
             print(f"stock chart of company {company} not available within API!")
             traceback.print_exc()
-
-
-
-    # TODO Other values?
