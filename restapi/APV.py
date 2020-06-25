@@ -80,7 +80,8 @@ class APV(BaseMethod):
         print("Equityinterest " + str(equity_interest))
 
         for i in range(len(self.forecast_fcfs_year) - 1):
-            GKu = GKu + (self.forecast_fcfs_year[i] / ((1 + equity_interest) ** (i + 1)))
+            presentValue = self.forecast_fcfs_year[i] / ((1 + equity_interest) ** (i + 1))
+            GKu = GKu + presentValue
 
         print("GKu without residual value " + str(GKu))
 
