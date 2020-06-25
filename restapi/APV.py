@@ -32,6 +32,8 @@ class APV(BaseMethod):
         if market_risk_premium is not None:
             self.marketValues.set_market_risk_premium(market_risk_premium)
 
+        self.market_capitalization = self.companyValues.get_market_capitalization(self.company)
+
     def calculateEnterpriseValue(self):
         """ Hauptmethode für die Berechnung des Unternehmenswertes """
 
@@ -151,7 +153,7 @@ class APV(BaseMethod):
 
         return equity_interest / 100
 
-    def getAdditionalValues(self):
+    def getAdditionalValues(self, companyValue: float, percentage_deviation: float):
         """ Zusätzliche Parameter, welche zur Angabe des Unternehmenswerte benötigt werden """
 
         additionalVaules = {"Number of values used for forecast": self.number_of_values_for_forecast,
@@ -160,18 +162,20 @@ class APV(BaseMethod):
                             "Date of last used FK FCF Ratio": self.last_date_fk_fcf_ratio,
                             "Date of debt used": self.last_date_debt,
                             "Currency": self.currency,
-                            #"recommendation": Recommendation.BUY
+                            "Market Capitalization": self.market_capitalization,
+                            "Amount of Shares": self.companyValues.get_amount_shares(self.company),
+                            "Recommendation": self.getRecommendation(companyValue, percentage_deviation)
                             }
 
         return additionalVaules
 
-    def getRecommendation(self, companyValue: float, market_capitalization: float, percentage_deviation: float = 5):
+    def getRecommendation(self, companyValue: float, percentage_deviation: float):
         """ Methode für die Berechnung der Kaufempfehlung anhand berechnetem Wert und realer Marktkapitalisierung """
 
         # Untergrenze der Bewertung -> Liegt der berechnete Unternehmenswert darunter wird verkauft!
-        floor = (market_capitalization / 100) * (100 - percentage_deviation)
+        floor = (self.market_capitalization / 100) * (100 - percentage_deviation)
         # Obergrenze der Bewertung -> Liegt der berechnete Unternehmenswert darüber wird gekauft!
-        ceiling = (market_capitalization / 100) * (100 + percentage_deviation)
+        ceiling = (self.market_capitalization / 100) * (100 + percentage_deviation)
 
         if companyValue <= floor:
             return Recommendation.SELL

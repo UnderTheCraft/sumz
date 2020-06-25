@@ -148,11 +148,11 @@ class EnterpriseValueCalculation(Resource):
         enterpriseValueCalculator = methods[method].getInstance()(company, last_date, risk_free_interest_rate,
                                                                   market_risk_premium)
 
-        enterpirseValue = enterpriseValueCalculator.calculateEnterpriseValue()
+        enterpriseValue = enterpriseValueCalculator.calculateEnterpriseValue()
 
-        additionalInformation = enterpriseValueCalculator.getAdditionalValues()
+        additionalInformation = enterpriseValueCalculator.getAdditionalValues(enterpriseValue, percentage_deviation=5)
 
-        response = {"Enterprise Value": enterpirseValue, **additionalInformation}
+        response = {"Enterprise Value": enterpriseValue, **additionalInformation}
 
         return make_response(response, status.HTTP_200_OK)
 

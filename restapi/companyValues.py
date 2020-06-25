@@ -117,6 +117,22 @@ class CompanyValues:
             print(f"market capitalization of company {company} not available within API!")
             traceback.print_exc()
 
+    def get_amount_shares(self, company: str):
+        try:
+            from requests_html import HTMLSession
+            session = HTMLSession()
+            response = session.get("https://finance.yahoo.com/quote/AAPL")
+
+            share_value = response.html.find('[class="Trsdu(0.3s) Fw(b) Fz(36px) Mb(-4px) D(ib)"]', first=True).text
+
+            amount_shares = self.get_market_capitalization(company)/share_value
+
+            return amount_shares
+
+        except Exception as e:
+            print(f"amount of shares of company {company} not available within API!")
+            traceback.print_exc()
+
     def get_stock_chart(self, company: str):
         try:
             interval = '1wk'
