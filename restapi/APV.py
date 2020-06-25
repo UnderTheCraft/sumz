@@ -81,6 +81,8 @@ class APV(BaseMethod):
         GKu = GKu + forecast_fcfs_year[-1] / (equity_interest * ((1 + equity_interest) ** len(forecast_fcfs_year)))
         print("GKu with residual value " + str(GKu))
 
+        print("FK CF Ratio" + str(self.calculateFkFcfRatio()))
+
         return GKu
 
     def calculatePresentValueOfTaxShield(self):
@@ -103,6 +105,22 @@ class APV(BaseMethod):
         print(f"last date debt: {self.last_date_debt} and liability: {last_liability['liability']}")
         return last_liability["liability"]
 
+    def calculateFkFcfRatio(self):
+
+        annual_liabilities = self.companyValues.get_liabilities(self.companyValues, quarterly=False, as_json=True)
+        annual_cash_flows = self.companyValues.get_annual_cash_flow(self.company)
+
+        fk_fcf_ratios = []
+
+        for i in range(len(annual_liabilities)):
+            if annual_liabilities[i]["date"] == annual_cash_flows[i]["date"] and annual_liabilities[i]["date"] <= self.last_date_debt:
+                fk_fcf_ratios.append(annual_liabilities[i]["liability"]/annual_cash_flows[i]["cash flow"])
+                self.last_date_fk_fcf_ratio = annual_liabilities[i]["date"]
+
+        self.number_of_values_for_fk_fcf_ratio = len(fk_fcf_ratios)
+
+        return np.avg(fk_fcf_ratios)
+
     def calculateEquityInterest(self):
         """ Berechnung der Eigenkapitalverzinsung """
 
@@ -116,7 +134,9 @@ class APV(BaseMethod):
         """ Zusätzliche Parameter, welche zur Angabe des Unternehmenswerte benötigt werden """
 
         additionalVaules = {"Number of values used for forecast": self.number_of_values_for_forecast,
+                            "Number of values used for FK FCF Ratio": self.number_of_values_for_fk_fcf_ratio,
                             "Date of last used past value": self.last_date_forecast,
+                            "Date of last used FK FCF Ratio": self.last_date_fk_fcf_ratio,
                             "Date of debt used": self.last_date_debt,
                             "Currency": self.currency,
                             "recommendation": self.getRecommendation()
