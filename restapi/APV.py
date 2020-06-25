@@ -160,7 +160,7 @@ class APV(BaseMethod):
                             "Date of last used FK FCF Ratio": self.last_date_fk_fcf_ratio,
                             "Date of debt used": self.last_date_debt,
                             "Currency": self.currency,
-                            "recommendation": Recommendation.BUY
+                            #"recommendation": Recommendation.BUY
                             }
 
         return additionalVaules
