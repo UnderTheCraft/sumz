@@ -24,8 +24,7 @@ class APV(BaseMethod):
         self.__companyValues = CompanyValues()
         self.__marketValues = MarketValues()
 
-        self.__market_capitalization, self.__amount_shares = self.__companyValues.\
-            get_market_capitalization_and_amount_shares(self.__company)
+        self.__market_capitalization, self.__amount_shares = self.__companyValues.get_market_capitalization_and_amount_shares(company)
 
         # Wenn vom Anwender spezifische Parameter verwendet werden, werden diese in dem marketValues Objekt
         # überschrieben und bei Kalkulationen später verwendet
