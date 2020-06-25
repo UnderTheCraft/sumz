@@ -67,29 +67,49 @@ class APV(BaseMethod):
         print("Past fcfs " + str(past_fcfs))
 
         forecast_fcfs_quarterly = ARIMAForecast().make_forecast(past_fcfs, 20)
-        print("FCF quarterly " + str(forecast_fcfs_quarterly))
+        print("FCF quarterly forecast " + str(forecast_fcfs_quarterly))
 
-        forecast_fcfs_year = np.sum(np.array_split(forecast_fcfs_quarterly, 5), axis=1)
-        print("FCF year" + str(forecast_fcfs_year))
+        self.forecast_fcfs_year = np.sum(np.array_split(forecast_fcfs_quarterly, 5), axis=1)
+        print("FCF year forecast " + str(self.forecast_fcfs_year))
 
         GKu = 0
         equity_interest = self.calculateEquityInterest()
         print("Equityinterest " + str(equity_interest))
 
-        for i in range(len(forecast_fcfs_year) - 1):
-            GKu = GKu + (forecast_fcfs_year[i] / ((1 + equity_interest) ** (i + 1)))
+        for i in range(len(self.forecast_fcfs_year) - 1):
+            GKu = GKu + (self.forecast_fcfs_year[i] / ((1 + equity_interest) ** (i + 1)))
 
         print("GKu without residual value " + str(GKu))
 
-        GKu = GKu + forecast_fcfs_year[-1] / (equity_interest * ((1 + equity_interest) ** len(forecast_fcfs_year)))
+        GKu = GKu + (self.forecast_fcfs_year[-1]) / (equity_interest * ((1 + equity_interest) ** len(
+            self.forecast_fcfs_year)))
         print("GKu with residual value " + str(GKu))
 
-        print("FK CF Ratio" + str(self.calculateFkFcfRatio()))
 
         return GKu
 
     def calculatePresentValueOfTaxShield(self):
-        return 0
+
+        fk_fcf_ratio = self.calculateFkFcfRatio()
+        print("FK FCF Ratio: "+str(fk_fcf_ratio))
+        current_liability = self.getDebt()
+        forecast_liabilities = np.multiply(self.forecast_fcfs_year[:-1], fk_fcf_ratio)
+        liabilities = [current_liability,*forecast_liabilities]
+        print("Liabilities: "+str(liabilities))
+
+        tax_rate = self.marketValues.get_tax_rate()/100
+        liability_interest = self.marketValues.get_risk_free_interest()/100
+
+        Vs = 0
+
+        for i in range(len(forecast_liabilities-1)):
+            Vs = Vs + (tax_rate*liability_interest*liabilities[i])/((1+liability_interest)**(i+1))
+
+        Vs = Vs + (tax_rate*liabilities[-1])/((1+liability_interest)**len(liabilities))
+
+        print("Tax Shield " + str(Vs))
+
+        return Vs
 
     def getDebt(self):
         """ Gibt das für ein bestimmtes Datum angegebenene quartalsweise Fremdkapital eines Unternehmens zurück """
