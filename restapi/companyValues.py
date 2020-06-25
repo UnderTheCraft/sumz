@@ -136,7 +136,7 @@ class CompanyValues:
             market_capitalization = float(number) * 10 ** self.__abbreviationToNumber[abbr]
 
             share_value = response.html.find('[class="Trsdu(0.3s) Fw(b) Fz(36px) Mb(-4px) D(ib)"]', first=True).text
-            amount_shares = self.market_capitalization / float(share_value)
+            amount_shares = market_capitalization / float(share_value)
 
             return floor(market_capitalization), floor(amount_shares)
 
