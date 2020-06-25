@@ -63,7 +63,7 @@ class CompanyValues:
     # get beta factor
     def get_beta_factor(self, company: str):
         try:
-            response = self.__sessionget(f'https://finance.yahoo.com/quote/{company}')
+            response = self.session.get(f'https://finance.yahoo.com/quote/{company}')
             beta_factor = response.html.find("[data-test='BETA_5Y-value']", first=True).text
             return float(beta_factor)
 
