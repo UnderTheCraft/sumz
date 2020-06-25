@@ -129,7 +129,7 @@ class CompanyValues:
     def get_market_capitalization_and_amount_shares(self, company: str):
         try:
             print(f"get market capitalization and amount shares from {company}")
-            
+
             response = self.session.get(f'https://finance.yahoo.com/quote/{company}')
             market_cap = response.html.find('[data-test=MARKET_CAP-value]', first=True).text
             number = market_cap[:-1]

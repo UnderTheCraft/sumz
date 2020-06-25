@@ -5,7 +5,7 @@ class APVInformation:
 
     def __init__(self):
         self.method_name = "APV"
-        self.method_description = "Adjustet Present Value"
+        self.method_description = "Adjusted Present Value"
 
     def dictDescription(self):
         repr = {"method": self.method_name, "description": self.method_description}

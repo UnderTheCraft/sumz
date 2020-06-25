@@ -35,7 +35,7 @@ class MainClass(Resource):
 
 @application.route("/getCorporateValue/<string:company>/<string:method>")
 class EnterpriseValueCalculation(Resource):
-    def get(self, company, method):
+    def get(self, company: str, method: str):
 
         last_date = request.args.get('last_date')
         if last_date is not None:
