@@ -1,14 +1,11 @@
 from requests_html import HTMLSession
 import requests
-import pandas as pd
 import traceback
 from restapi.companyInfo import CompanyInfo
 from dateutil import parser
 from datetime import datetime
+from math import floor
 import time
-from matplotlib import pyplot as plt
-from io import BytesIO
-from PIL import Image
 import json
 
 class CompanyValues:
@@ -111,7 +108,9 @@ class CompanyValues:
             number = market_cap[:-1]
             abbr = market_cap[-1]
 
-            return float(number) * 10 ** self.__abbrevationToNumber[abbr]
+            market_capitalization = float(number) * 10 ** self.__abbrevationToNumber[abbr]
+
+            return floor(market_capitalization)
 
         except Exception as e:
             print(f"market capitalization of company {company} not available within API!")
@@ -127,7 +126,7 @@ class CompanyValues:
 
             amount_shares = self.get_market_capitalization(company)/float(share_value)
 
-            return amount_shares
+            return floor(amount_shares)
 
         except Exception as e:
             print(f"amount of shares of company {company} not available within API!")

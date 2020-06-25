@@ -4,6 +4,7 @@ from restapi.companyValues import CompanyValues
 from restapi.marketValues import MarketValues
 from datetime import datetime
 import numpy as np
+from math import floor
 
 from restapi.recommendation import Recommendation
 
@@ -41,7 +42,7 @@ class APV(BaseMethod):
                            self.calculatePresentValueOfTaxShield() - \
                            self.getDebt()
 
-        return enterprise_value
+        return floor(enterprise_value)
 
     def calculatePresentValueOfCashFlow(self):
         """ Berechnung des Barwertes zukünftiger Cashflows durch Abzinsung """

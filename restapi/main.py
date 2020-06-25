@@ -134,7 +134,6 @@ class MarketCapitalization(Resource):
 class EnterpriseValueCalculation(Resource):
     def get(self, company, method):
 
-
         last_date = request.args.get('last_date')
         if last_date is not None:
             last_date = datetime.strptime(last_date, "%d.%m.%Y").date()
