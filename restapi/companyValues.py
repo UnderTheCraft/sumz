@@ -128,6 +128,23 @@ class CompanyValues:
             print(f"amount of shares of company {company} not available within API!")
             traceback.print_exc()
 
+    def get_market_capitalization_and_amount_shares(self, company: str):
+        try:
+            response = self.__session.get(f'https://finance.yahoo.com/quote/{company}')
+            market_cap = response.html.find("[data-test=MARKET_CAP-value]", first=True).text
+            number = market_cap[:-1]
+            abbr = market_cap[-1]
+            market_capitalization = float(number) * 10 ** self.__abbrevationToNumber[abbr]
+
+            share_value = response.html.find('[class="Trsdu(0.3s) Fw(b) Fz(36px) Mb(-4px) D(ib)"]', first=True).text
+            amount_shares = self.market_capitalization / float(share_value)
+
+            return floor(market_capitalization), floor(amount_shares)
+
+        except Exception as e:
+            print(f"market capitalization of company {company} not available within API!")
+            traceback.print_exc()
+
     def get_stock_chart(self, company: str):
         try:
             response = requests.get(f'https://query1.finance.yahoo.com/v8/finance/chart/{company}'

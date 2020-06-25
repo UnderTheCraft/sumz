@@ -24,7 +24,8 @@ class APV(BaseMethod):
         self.__companyValues = CompanyValues()
         self.__marketValues = MarketValues()
 
-        self.__market_capitalization = self.__companyValues.get_market_capitalization(self.__company)
+        self.__market_capitalization, self.__amount_shares = self.__companyValues.\
+            get_market_capitalization_and_amount_shares(self.__company)
 
         # Wenn vom Anwender spezifische Parameter verwendet werden, werden diese in dem marketValues Objekt
         # überschrieben und bei Kalkulationen später verwendet
@@ -161,7 +162,7 @@ class APV(BaseMethod):
                             "Date of debt used": self.last_date_debt,
                             "Currency": self.currency,
                             "Market Capitalization": self.__market_capitalization,
-                            "Amount of Shares": self.__companyValues.get_amount_shares(self.__company),
+                            "Amount of Shares": self.__amount_shares,
                             "Recommendation": self.getRecommendation(companyValue, percentage_deviation)
                             }
 
