@@ -107,7 +107,7 @@ class APV(BaseMethod):
 
     def calculateFkFcfRatio(self):
 
-        annual_liabilities = self.companyValues.get_liabilities(self.companyValues, quarterly=False, as_json=True)
+        annual_liabilities = self.companyValues.get_liabilities(self.company, quarterly=False, as_json=True)
         annual_cash_flows = self.companyValues.get_annual_cash_flow(self.company)
 
         fk_fcf_ratios = []
