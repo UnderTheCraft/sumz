@@ -11,13 +11,16 @@ from restapi.recommendation import Recommendation
 class APV(BaseMethod):
 
     def __init__(self, company: str = None,
-                 last_date_forecast: datetime = None,
+                 last_date: datetime = None,
                  risk_free_interest_rate: float = None,
                  market_risk_premium: float = None):
         """ Die benötigten Parameter werden festgelegt """
 
         self.company = company
-        self.last_date_forecast = last_date_forecast
+        if last_date is None:
+            self.last_date = datetime.today().date()
+        else:
+            self.last_date = last_date
         self.last_date_debt = None
         self.companyValues = CompanyValues()
         self.marketValues = MarketValues()
@@ -45,13 +48,13 @@ class APV(BaseMethod):
 
         self.currency = currency
 
-        if self.last_date_forecast is None:
+        if self.last_date is None:
             self.last_date_forecast = dates[0]
             past_fcfs = fcfs[0:20]
 
         else:
             for date in dates:
-                if date <= self.last_date_forecast:
+                if date <= self.last_date:
                     index = dates.index(date)
                     self.last_date_forecast = date
                     break
@@ -93,10 +96,8 @@ class APV(BaseMethod):
 
         quarterly_liabilities = self.companyValues.get_liabilities(self.company, quarterly=True, as_json=True)
 
-        if self.last_date_forecast is None:
-            last_liability = quarterly_liabilities[-1]
         for liability in quarterly_liabilities:
-            if liability["date"] <= self.last_date_forecast:
+            if liability["date"] <= self.last_date:
                 last_liability = liability
             else:
                 break
@@ -113,13 +114,13 @@ class APV(BaseMethod):
         fk_fcf_ratios = []
 
         for i in range(len(annual_liabilities)):
-            if annual_liabilities[i]["date"] == annual_cash_flows[i]["date"] and annual_liabilities[i]["date"] <= self.last_date_debt:
+            if annual_liabilities[i]["date"] == annual_cash_flows[i]["date"] and annual_liabilities[i]["date"] <= self.last_date:
                 fk_fcf_ratios.append(annual_liabilities[i]["liability"]/annual_cash_flows[i]["cash flow"])
                 self.last_date_fk_fcf_ratio = annual_liabilities[i]["date"]
 
         self.number_of_values_for_fk_fcf_ratio = len(fk_fcf_ratios)
 
-        return np.avg(fk_fcf_ratios)
+        return np.average(fk_fcf_ratios)
 
     def calculateEquityInterest(self):
         """ Berechnung der Eigenkapitalverzinsung """
@@ -139,7 +140,7 @@ class APV(BaseMethod):
                             "Date of last used FK FCF Ratio": self.last_date_fk_fcf_ratio,
                             "Date of debt used": self.last_date_debt,
                             "Currency": self.currency,
-                            "recommendation": self.getRecommendation()
+                            "recommendation": Recommendation.BUY
                             }
 
         return additionalVaules

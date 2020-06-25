@@ -34,7 +34,7 @@ class CompanyValues:
             raw_fcfs = response.html.find(".histDataTable", first=True).find(".col2")[1:]
             currency = response.html.find("#securityQuote", first=True).find(".info")[1].text
 
-            dates = [parser.parse(rawDate.text) for rawDate in raw_dates]
+            dates = [parser.parse(rawDate.text).date() for rawDate in raw_dates]
             fcfs = [int(float(rawFCF.text[:-1]) * 10 ** self.__abbrevationToNumber[rawFCF.text[-1]]) for rawFCF in raw_fcfs]
 
             if as_json:
@@ -59,7 +59,7 @@ class CompanyValues:
 
             cash_flows = [cash_flow_object["reportedValue"]["raw"] for cash_flow_object in cash_flow_objects]
 
-            return [{'date': date, 'cash flow': cash_flow} for date, cash_flow in zip(dates, cash_flows)]
+            return [{'date': date.date(), 'cash flow': cash_flow} for date, cash_flow in zip(dates, cash_flows)]
 
         except Exception as e:
             print(f"{company} not available within API!")
@@ -88,12 +88,12 @@ class CompanyValues:
                                     f"=493590046&period2={period2}&corsDomain=finance.yahoo.com").json()
             result = response["timeseries"]["result"][0]
             dates = [datetime.fromtimestamp(timestamp) for timestamp in result["timestamp"]]
-            liability_objects = result["quarterlyTotalLiabilitiesNetMinorityInterest"]
+            liability_objects = result[f"{frequency}TotalLiabilitiesNetMinorityInterest"]
 
             liabilities = [liability_object["reportedValue"]["raw"] for liability_object in liability_objects]
 
             if as_json:
-                return [{'date': date, 'liability': liability} for date, liability in zip(dates, liabilities)]
+                return [{'date': date.date(), 'liability': liability} for date, liability in zip(dates, liabilities)]
             else:
                 return dates, liabilities
 
