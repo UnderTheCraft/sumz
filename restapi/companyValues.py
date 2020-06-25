@@ -6,24 +6,22 @@ from dateutil import parser
 from datetime import datetime
 from math import floor
 import time
-import json
 
 class CompanyValues:
 
     def __init__(self):
         self.__companies = CompanyInfo()
-        self.__abbrevationToNumber = {'K': 3, 'M': 6, 'B': 9, 'T': 12}
+        self.__abbreviationToNumber = {'K': 3, 'M': 6, 'B': 9, 'T': 12}
+        self.session = HTMLSession()
         self.stock_chart_interval = '1wk'
         self.stock_chart_range = '5y'
-        self.__session = HTMLSession()
-
 
     def get_cash_flows(self, company, as_json = False):
         """ Beziehen der quartalsweisen CashFlows von der yCharts Website mithilfe einer HTML Session"""
         try:
 
             # TODO hier könnte ne tryExcept hin, falls z.b. keine Verbindung aufgebaut werden kann
-            response = self.__session.get(f'https://ycharts.com/companies/{company}/free_cash_flow')
+            response = self.session.get(f'https://ycharts.com/companies/{company}/free_cash_flow')
 
             print(f"The headers of the requests are:\n{response.headers}")
 
@@ -33,7 +31,7 @@ class CompanyValues:
             currency = response.html.find("#securityQuote", first=True).find(".info")[1].text
 
             dates = [parser.parse(rawDate.text).date() for rawDate in raw_dates]
-            fcfs = [int(float(rawFCF.text[:-1]) * 10 ** self.__abbrevationToNumber[rawFCF.text[-1]]) for rawFCF in raw_fcfs]
+            fcfs = [int(float(rawFCF.text[:-1]) * 10 ** self.__abbreviationToNumber[rawFCF.text[-1]]) for rawFCF in raw_fcfs]
 
             if as_json:
                 result_json = [{'date': date, 'FCF': fcf} for date, fcf in zip(dates, fcfs)]
@@ -100,13 +98,13 @@ class CompanyValues:
     # Markkapitalisierung
     def get_market_capitalization(self, company: str):
         try:
-            response = self.__session.get(f'https://finance.yahoo.com/quote/{company}')
+            response = self.session.get(f'https://finance.yahoo.com/quote/{company}')
             market_cap = response.html.find("[data-test=MARKET_CAP-value]", first=True).text
 
             number = market_cap[:-1]
             abbr = market_cap[-1]
 
-            market_capitalization = float(number) * 10 ** self.__abbrevationToNumber[abbr]
+            market_capitalization = float(number) * 10 ** self.__abbreviationToNumber[abbr]
 
             return floor(market_capitalization)
 
@@ -116,7 +114,7 @@ class CompanyValues:
 
     def get_amount_shares(self, company: str):
         try:
-            response = self.__session.get(f"https://finance.yahoo.com/quote/{company}")
+            response = self.session.get(f"https://finance.yahoo.com/quote/{company}")
 
             share_value = response.html.find('[class="Trsdu(0.3s) Fw(b) Fz(36px) Mb(-4px) D(ib)"]', first=True).text
 
@@ -130,11 +128,12 @@ class CompanyValues:
 
     def get_market_capitalization_and_amount_shares(self, company: str):
         try:
-            response = self.__session.get(f'https://finance.yahoo.com/quote/{company}')
+            response = self.session.get(f'https://finance.yahoo.com/quote/{company}')
             market_cap = response.html.find("[data-test=MARKET_CAP-value]", first=True).text
             number = market_cap[:-1]
             abbr = market_cap[-1]
-            market_capitalization = float(number) * 10 ** self.__abbrevationToNumber[abbr]
+
+            market_capitalization = float(number) * 10 ** self.__abbreviationToNumber[abbr]
 
             share_value = response.html.find('[class="Trsdu(0.3s) Fw(b) Fz(36px) Mb(-4px) D(ib)"]', first=True).text
             amount_shares = self.market_capitalization / float(share_value)
