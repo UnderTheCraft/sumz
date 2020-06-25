@@ -37,8 +37,8 @@ class MainClass(Resource):
 class EnterpriseValueCalculation(Resource):
     def get(self, company: str, method: str):
 
-        print("In EnterpriseValueCalculation:")
-        print(f"Company: {company}, method: {method}")
+        print("EnterpriseValueCalculation Started!")
+        print(f"Using Company {company} and method {method}")
 
         last_date = request.args.get('last_date')
         if last_date is not None:
@@ -50,8 +50,9 @@ class EnterpriseValueCalculation(Resource):
         if market_risk_premium is not None:
             market_risk_premium = float(market_risk_premium)
 
-        enterpriseValueCalculator = methods[method].getInstance()(company, last_date, risk_free_interest_rate,
-                                                                  market_risk_premium)
+        enterpriseValueCalculator = methods[method].getInstance()(company=company, last_date=last_date,
+                                                                  risk_free_interest_rate=risk_free_interest_rate,
+                                                                  market_risk_premium=market_risk_premium)
 
         enterpriseValue = enterpriseValueCalculator.calculateEnterpriseValue()
 
