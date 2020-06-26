@@ -28,6 +28,8 @@ marketValues = MarketValues()
 # TODO Metodenliste auslagern
 methods = {APVInformation().method_name: APVInformation()}
 
+print("API successfully started")
+
 @application.route("/")
 class MainClass(Resource):
     def get(self):
