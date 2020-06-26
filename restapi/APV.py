@@ -15,7 +15,9 @@ class APV(BaseMethod):
                  risk_free_interest_rate: float = None, market_risk_premium: float = None):
         """ Die benötigten Parameter werden festgelegt """
 
-        print(f"Initializing APV Base with company {company}")
+        print(f"Initializing APV Base:\n  Company: {company}\n  Last Date: {last_date}"
+              f"\n  Risk Free Interest Rate: {risk_free_interest_rate}\n  Market Risk Premium: {market_risk_premium}")
+
         self.__company = company
         if last_date is None:
             self.__last_date = datetime.today().date()
