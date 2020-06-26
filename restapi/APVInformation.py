@@ -13,4 +13,4 @@ class APVInformation:
 
     def getInstance(self):
         print("Initializing instance of APV Class")
-        return APV().__class__
+        return APV
