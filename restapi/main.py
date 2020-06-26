@@ -3,6 +3,7 @@ from flask import Flask, jsonify, make_response, request, send_file
 from flask_cors import CORS
 from flask_api import status
 from flask_restx import Api, Resource
+from flask_compress import Compress
 
 from restapi.APVInformation import APVInformation
 from restapi.arimaForecast import ARIMAForecast
@@ -17,6 +18,8 @@ flask_app = Flask(__name__)
 print("Flask App created")
 CORS(flask_app)
 print("CORS added")
+Compress(flask_app)
+print("Compressed Application")
 application = Api(app=flask_app,
                   title="SUMZ",
                   description="Das Backend der SUMZ Anwendung für Unternehmensbewertung")
