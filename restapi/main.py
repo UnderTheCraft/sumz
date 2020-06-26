@@ -39,6 +39,9 @@ class MainClass(Resource):
         return make_response("Hello World", status.HTTP_200_OK)
 
 @application.route("/getCorporateValue/<string:company>/<string:method>", methods=['GET'])
+@application.param('last_date')
+@application.param('risk_free_interest_rate')
+@application.param('market_risk_premium')
 class EnterpriseValueCalculation(Resource):
     def get(self, company: str, method: str):
 
@@ -99,9 +102,14 @@ class CashFlows(Resource):
                                  status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-@application.route("/getCashFlowForecast/<string:company>/prediction_length=<int:prediction_length>", methods=['GET'])
+@application.route("/getCashFlowForecast/<string:company>", methods=['GET'])
+@application.param('prediction_length')
 class CashFlowForecast(Resource):
-    def get(self, company, prediction_length):
+    def get(self, company):
+
+        prediction_length = request.args.get('prediction_length')
+        prediction_length = 20 if prediction_length is None else int(prediction_length)
+
         dates, fcfs, currency = CompanyValues().get_cash_flows(company)
         fcfs = fcfs[0:20]
         fcfs.reverse()
