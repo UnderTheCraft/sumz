@@ -4,7 +4,7 @@ class CompanyInfo:
         self.__all_companies_short = ["AAPL", "MSFT", "JNJ", "WMT", "V", "JPM", "PG", "UNH", "HD", "INTC", "VZ", "DIS",
                                       "MRK", "XOM",
                                       "KO", "PFE", "CSCO", "CVX", "MCD", "NKE", "IBM", "BA", "MMM", "AXP", "GS", "CAT",
-                                      "WBA"
+                                      "WBA",
                                       "TRV"]  # ,"DOW","UTX"]
 
         self.__all_companies_long = ["Apple", "Microsoft", "Johnson & Johnson", "Walmart", "Visa",
