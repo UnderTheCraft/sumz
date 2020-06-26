@@ -11,12 +11,8 @@ from restapi.recommendation import Recommendation
 
 class APV(BaseMethod):
 
-    def __init__(self, company: str, last_date: datetime,
-                 risk_free_interest_rate: float = None, market_risk_premium: float = None):
+    def __init__(self, company: str, last_date: datetime = None, risk_free_interest_rate: float = None, market_risk_premium: float = None):
         """ Die benötigten Parameter werden festgelegt """
-
-        print(f"Initializing APV Base:\n  Company: {company}\n  Last Date: {last_date}"
-              f"\n  Risk Free Interest Rate: {risk_free_interest_rate}\n  Market Risk Premium: {market_risk_premium}")
 
         self.__company = company
         if last_date is None:
@@ -26,8 +22,8 @@ class APV(BaseMethod):
         self.last_date_debt = None
         self.__companyValues = CompanyValues()
         self.__marketValues = MarketValues()
-
-        self.__market_capitalization, self.__amount_shares = self.__companyValues.get_market_capitalization_and_amount_shares(company)
+        self.__market_capitalization, self.__amount_shares =\
+            self.__companyValues.get_market_capitalization_and_amount_shares(company)
 
         # Wenn vom Anwender spezifische Parameter verwendet werden, werden diese in dem marketValues Objekt
         # überschrieben und bei Kalkulationen später verwendet
@@ -35,6 +31,9 @@ class APV(BaseMethod):
             self.__marketValues.set_risk_free_interest(risk_free_interest_rate)
         if market_risk_premium is not None:
             self.__marketValues.set_market_risk_premium(market_risk_premium)
+
+        print(f"Initialized APV Base:\n  Company: {company}\n  Last Date: {last_date}"
+              f"\n  Risk Free Interest Rate: {risk_free_interest_rate}\n  Market Risk Premium: {market_risk_premium}")
 
     def calculateEnterpriseValue(self):
         """ Hauptmethode für die Berechnung des Unternehmenswertes """
