@@ -35,7 +35,7 @@ class MainClass(Resource):
     def get(self):
         return make_response("Hello World", status.HTTP_200_OK)
 
-@application.route("/getCorporateValue/<string:company>/<string:method>")
+@application.route("/getCorporateValue/<string:company>/<string:method>", methods=['GET'])
 class EnterpriseValueCalculation(Resource):
     def get(self, company: str, method: str):
 
@@ -52,15 +52,12 @@ class EnterpriseValueCalculation(Resource):
         if market_risk_premium is not None:
             market_risk_premium = float(market_risk_premium)
 
-        enterpriseValueCalculator = methods[method].getInstance()(company=company, last_date=last_date,
-                                                                  risk_free_interest_rate=risk_free_interest_rate,
-                                                                  market_risk_premium=market_risk_premium)
+        enterprise_value_calculator = methods[method].\
+            getInstance()(company, last_date, risk_free_interest_rate, market_risk_premium)
 
-        enterpriseValue = enterpriseValueCalculator.calculateEnterpriseValue()
-
-        additionalInformation = enterpriseValueCalculator.getAdditionalValues(enterpriseValue, percentage_deviation=5)
-
-        response = {"Enterprise Value": enterpriseValue, **additionalInformation}
+        enterprise_value = enterprise_value_calculator.calculateEnterpriseValue()
+        additional_information = enterprise_value_calculator.getAdditionalValues(enterprise_value, percentage_deviation=5)
+        response = {"Enterprise Value": enterprise_value, **additional_information}
 
         return make_response(response, status.HTTP_200_OK)
 
@@ -82,7 +79,7 @@ class Methods(Resource):
 class CashFlows(Resource):
     def get(self, company):
         try:
-            company_cash_flows = companyValues.get_cash_flows(company.upper(),True)
+            company_cash_flows = companyValues.get_cash_flows(company.upper(), True)
             company_cash_flows.append({"company": company})
             response = make_response(jsonify(company_cash_flows), status.HTTP_200_OK)
             response.headers['content-type'] = 'application/json'
@@ -135,7 +132,7 @@ class BetaFactor(Resource):
 @application.route("/getAnnualLiabilities/<string:company>", methods=['GET'])
 class YearlyLiabilities(Resource):
     def get(self, company):
-        response = {"total_liabilities": companyValues.get_liabilities(company,False,True)}
+        response = {"total_liabilities": companyValues.get_liabilities(company, False, True)}
         return make_response(response, status.HTTP_200_OK)
 
 
@@ -148,7 +145,7 @@ class AnnualFreeCashFlows(Resource):
 @application.route("/getQuarterlyLiabilities/<string:company>", methods=['GET'])
 class QuarterlyLiabilities(Resource):
     def get(self, company):
-        response = {"total_liabilities": companyValues.get_liabilities(company, True,True)}
+        response = {"total_liabilities": companyValues.get_liabilities(company, True, True)}
         return make_response(response, status.HTTP_200_OK)
 
 
