@@ -8,5 +8,6 @@ numpy
 statsmodels
 requests-html
 flask-restx
+flask-compress
 matplotlib
 pillow
