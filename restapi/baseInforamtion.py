@@ -1,12 +1,12 @@
-from restapi import baseMethod
+from restapi.baseMethod import BaseMethod
 
 
 class BaseInformation:
 
-    def __init__(self, method_name: object, method_description: object, methodClass: object) -> object:
+    def __init__(self, method_name: object, method_description: object, method_class: BaseMethod):
         self.__method_name__ = method_name
         self.__method_description__ = method_description
-        self.__methodClass__ = methodClass
+        self.__method_class__ = method_class
 
     def dictDescription(self):
         description = {"method": self.__method_name__, "description": self.__method_description__}
@@ -14,8 +14,8 @@ class BaseInformation:
 
     def getInstance(self):
         print(f"Initializing instance of {self.__method_name__} Class")
-        return self.__methodClass__
+        return self.__method_class__
 
     def getMethodsElement(self):
-        methodsElement = {self.__method_name__:self}
-        return methodsElement
+        methods_element = {self.__method_name__:self}
+        return methods_element
