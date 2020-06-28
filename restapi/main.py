@@ -6,6 +6,7 @@ from flask_restx import Api, Resource
 from flask_compress import Compress
 
 from restapi.APVInformation import APVInformation
+from restapi.FCFInformation import FCFInformation
 from restapi.arimaForecast import ARIMAForecast
 from restapi.companyInfo import CompanyInfo
 from restapi.companyValues import CompanyValues
@@ -29,7 +30,9 @@ companyInfo = CompanyInfo()
 companyValues = CompanyValues()
 marketValues = MarketValues()
 # TODO Metodenliste auslagern
-methods = {APVInformation().method_name: APVInformation()}
+methods = {}
+methods.update(APVInformation().getMethodsElement())
+methods.update(FCFInformation().getMethodsElement())
 
 print("API successfully started")
 

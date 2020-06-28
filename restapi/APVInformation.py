@@ -1,16 +1,8 @@
 from restapi.APV import APV
+from restapi.baseInforamtion import BaseInformation
 
 
-class APVInformation:
+class APVInformation(BaseInformation):
 
     def __init__(self):
-        self.method_name = "APV"
-        self.method_description = "Adjusted Present Value"
-
-    def dictDescription(self):
-        repr = {"method": self.method_name, "description": self.method_description}
-        return repr
-
-    def getInstance(self):
-        print("Initializing instance of APV Class")
-        return APV
+        super().__init__(method_name="APV", method_description="Adjusted Present Value", methodClass=APV)
