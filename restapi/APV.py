@@ -2,7 +2,7 @@ from restapi.baseMethod import BaseMethod
 from restapi.arimaForecast import ARIMAForecast
 from restapi.companyValues import CompanyValues
 from restapi.marketValues import MarketValues
-from datetime import datetime
+from datetime import date
 import numpy as np
 from math import floor
 
@@ -11,29 +11,13 @@ from restapi.recommendation import Recommendation
 
 class APV(BaseMethod):
 
-    def __init__(self, company, last_date: datetime = None, risk_free_interest_rate: float = None, market_risk_premium: float = None):
+    def __init__(self, company: str, last_date: date = None, risk_free_interest_rate: float = None,
+                 market_risk_premium: float = None):
         """ Die benötigten Parameter werden festgelegt """
-
-        self.__company = company
-        if last_date is None:
-            self.__last_date = datetime.today().date()
-        else:
-            self.__last_date = last_date
+        super().__init__(company=company, last_date=last_date, risk_free_interest_rate=risk_free_interest_rate,
+                         market_risk_premium=market_risk_premium)
+        #TODO Instanzvariablen konsitent deklarieren
         self.last_date_debt = None
-        self.__companyValues = CompanyValues()
-        self.__marketValues = MarketValues()
-        self.__market_capitalization, self.__amount_shares =\
-            self.__companyValues.get_market_capitalization_and_amount_shares(company)
-
-        # Wenn vom Anwender spezifische Parameter verwendet werden, werden diese in dem marketValues Objekt
-        # überschrieben und bei Kalkulationen später verwendet
-        if risk_free_interest_rate is not None:
-            self.__marketValues.set_risk_free_interest(risk_free_interest_rate)
-        if market_risk_premium is not None:
-            self.__marketValues.set_market_risk_premium(market_risk_premium)
-
-        print(f"Initialized APV Base:\n  Company: {company}\n  Last Date: {last_date}"
-              f"\n  Risk Free Interest Rate: {risk_free_interest_rate}\n  Market Risk Premium: {market_risk_premium}")
 
     def calculateEnterpriseValue(self):
         """ Hauptmethode für die Berechnung des Unternehmenswertes """
@@ -87,27 +71,26 @@ class APV(BaseMethod):
             self.forecast_fcfs_year)))
         print("GKu with residual value " + str(GKu))
 
-
         return GKu
 
     def calculatePresentValueOfTaxShield(self):
 
         fk_fcf_ratio = self.calculateFkFcfRatio()
-        print("FK FCF Ratio: "+str(fk_fcf_ratio))
+        print("FK FCF Ratio: " + str(fk_fcf_ratio))
         current_liability = self.getDebt()
         forecast_liabilities = np.multiply(self.forecast_fcfs_year[:-1], fk_fcf_ratio)
-        liabilities = [current_liability,*forecast_liabilities]
-        print("Liabilities: "+str(liabilities))
+        liabilities = [current_liability, *forecast_liabilities]
+        print("Liabilities: " + str(liabilities))
 
         tax_rate = self.__marketValues.get_tax_rate() / 100
         liability_interest = self.__marketValues.get_risk_free_interest() / 100
 
         Vs = 0
 
-        for i in range(len(forecast_liabilities-1)):
-            Vs = Vs + (tax_rate*liability_interest*liabilities[i])/((1+liability_interest)**(i+1))
+        for i in range(len(forecast_liabilities - 1)):
+            Vs = Vs + (tax_rate * liability_interest * liabilities[i]) / ((1 + liability_interest) ** (i + 1))
 
-        Vs = Vs + (tax_rate*liabilities[-1])/((1+liability_interest)**len(liabilities))
+        Vs = Vs + (tax_rate * liabilities[-1]) / ((1 + liability_interest) ** len(liabilities))
 
         print("Tax Shield " + str(Vs))
 
@@ -136,8 +119,9 @@ class APV(BaseMethod):
         fk_fcf_ratios = []
 
         for i in range(len(annual_liabilities)):
-            if annual_liabilities[i]["date"] == annual_cash_flows[i]["date"] and annual_liabilities[i]["date"] <= self.__last_date:
-                fk_fcf_ratios.append(annual_liabilities[i]["liability"]/annual_cash_flows[i]["cash flow"])
+            if annual_liabilities[i]["date"] == annual_cash_flows[i]["date"] and annual_liabilities[i][
+                "date"] <= self.__last_date:
+                fk_fcf_ratios.append(annual_liabilities[i]["liability"] / annual_cash_flows[i]["cash flow"])
                 self.last_date_fk_fcf_ratio = annual_liabilities[i]["date"]
 
         self.number_of_values_for_fk_fcf_ratio = len(fk_fcf_ratios)
