@@ -11,28 +11,28 @@ class BaseMethod:
 
         """ Die benötigten Parameter werden festgelegt """
 
-        self.__company = company
+        self._company = company
 
         if last_date is None:
-            self.__last_date = datetime.today().date()
+            self._last_date = datetime.today().date()
         else:
-            self.__last_date = last_date
+            self._last_date = last_date
 
         # Wenn vom Anwender spezifische Parameter verwendet werden, werden diese in dem marketValues Objekt
         # überschrieben und bei Kalkulationen später verwendet
         if risk_free_interest_rate is not None:
-            self.__marketValues.set_risk_free_interest(risk_free_interest_rate)
+            self._marketValues.set_risk_free_interest(risk_free_interest_rate)
         if market_risk_premium is not None:
-            self.__marketValues.set_market_risk_premium(market_risk_premium)
+            self._marketValues.set_market_risk_premium(market_risk_premium)
 
-        self.__companyValues = CompanyValues()
-        self.__marketValues = MarketValues()
+        self._companyValues = CompanyValues()
+        self._marketValues = MarketValues()
 
-        self.__market_capitalization, self.__amount_shares = \
-            self.__companyValues.get_market_capitalization_and_amount_shares(company)
+        self._market_capitalization, self._amount_shares = \
+            self._companyValues.get_market_capitalization_and_amount_shares(company)
 
-        print(f"Initialized Calculation Method:\n  Company: {self.__company}\n  Last Date: {self.__last_date}"
-              f"\n  Risk Free Interest Rate: {self.__marketValues.get_risk_free_interest()}\n  Market Risk Premium: {self.__marketValues.get_market_risk_premium()}")
+        print(f"Initialized Calculation Method:\n  Company: {self._company}\n  Last Date: {self._last_date}"
+              f"\n  Risk Free Interest Rate: {self._marketValues.get_risk_free_interest()}\n  Market Risk Premium: {self._marketValues.get_market_risk_premium()}")
 
 
     @abstractmethod

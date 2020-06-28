@@ -31,15 +31,15 @@ class APV(BaseMethod):
     def calculatePresentValueOfCashFlow(self):
         """ Berechnung des Barwertes zukünftiger Cashflows durch Abzinsung """
 
-        dates, fcfs, self.currency = CompanyValues().get_cash_flows(self.__company)
+        dates, fcfs, self.currency = CompanyValues().get_cash_flows(self._company)
 
-        if self.__last_date is None:
+        if self._last_date is None:
             self.last_date_forecast = dates[0]
             past_fcfs = fcfs[0:20]
 
         else:
             for date in dates:
-                if date <= self.__last_date:
+                if date <= self._last_date:
                     index = dates.index(date)
                     self.last_date_forecast = date
                     break
@@ -82,8 +82,8 @@ class APV(BaseMethod):
         liabilities = [current_liability, *forecast_liabilities]
         print("Liabilities: " + str(liabilities))
 
-        tax_rate = self.__marketValues.get_tax_rate() / 100
-        liability_interest = self.__marketValues.get_risk_free_interest() / 100
+        tax_rate = self._marketValues.get_tax_rate() / 100
+        liability_interest = self._marketValues.get_risk_free_interest() / 100
 
         Vs = 0
 
@@ -99,10 +99,10 @@ class APV(BaseMethod):
     def getDebt(self):
         """ Gibt das für ein bestimmtes Datum angegebenene quartalsweise Fremdkapital eines Unternehmens zurück """
 
-        quarterly_liabilities = self.__companyValues.get_liabilities(self.__company, quarterly=True, as_json=True)
+        quarterly_liabilities = self._companyValues.get_liabilities(self._company, quarterly=True, as_json=True)
 
         for liability in quarterly_liabilities:
-            if liability["date"] <= self.__last_date:
+            if liability["date"] <= self._last_date:
                 last_liability = liability
             else:
                 break
@@ -113,14 +113,14 @@ class APV(BaseMethod):
 
     def calculateFkFcfRatio(self):
 
-        annual_liabilities = self.__companyValues.get_liabilities(self.__company, quarterly=False, as_json=True)
-        annual_cash_flows = self.__companyValues.get_annual_cash_flow(self.__company)
+        annual_liabilities = self._companyValues.get_liabilities(self._company, quarterly=False, as_json=True)
+        annual_cash_flows = self._companyValues.get_annual_cash_flow(self._company)
 
         fk_fcf_ratios = []
 
         for i in range(len(annual_liabilities)):
             if annual_liabilities[i]["date"] == annual_cash_flows[i]["date"] and annual_liabilities[i][
-                "date"] <= self.__last_date:
+                "date"] <= self._last_date:
                 fk_fcf_ratios.append(annual_liabilities[i]["liability"] / annual_cash_flows[i]["cash flow"])
                 self.last_date_fk_fcf_ratio = annual_liabilities[i]["date"]
 
@@ -131,9 +131,9 @@ class APV(BaseMethod):
     def calculateEquityInterest(self):
         """ Berechnung der Eigenkapitalverzinsung """
 
-        equity_interest = self.__marketValues.get_risk_free_interest() + \
-                          (self.__marketValues.get_market_risk_premium() * \
-                           self.__companyValues.get_beta_factor(self.__company))
+        equity_interest = self._marketValues.get_risk_free_interest() + \
+                          (self._marketValues.get_market_risk_premium() * \
+                           self._companyValues.get_beta_factor(self._company))
 
         return equity_interest / 100
 
@@ -146,8 +146,8 @@ class APV(BaseMethod):
                             "Date of last used FK FCF Ratio": self.last_date_fk_fcf_ratio,
                             "Date of debt used": self.last_date_debt,
                             "Currency": self.currency,
-                            "Market Capitalization": self.__market_capitalization,
-                            "Amount of Shares": self.__amount_shares,
+                            "Market Capitalization": self._market_capitalization,
+                            "Amount of Shares": self._amount_shares,
                             "Recommendation": self.getRecommendation(companyValue, percentage_deviation)
                             }
 
@@ -157,9 +157,9 @@ class APV(BaseMethod):
         """ Methode für die Berechnung der Kaufempfehlung anhand berechnetem Wert und realer Marktkapitalisierung """
 
         # Untergrenze der Bewertung -> Liegt der berechnete Unternehmenswert darunter wird verkauft!
-        floor = (self.__market_capitalization / 100) * (100 - percentage_deviation)
+        floor = (self._market_capitalization / 100) * (100 - percentage_deviation)
         # Obergrenze der Bewertung -> Liegt der berechnete Unternehmenswert darüber wird gekauft!
-        ceiling = (self.__market_capitalization / 100) * (100 + percentage_deviation)
+        ceiling = (self._market_capitalization / 100) * (100 + percentage_deviation)
 
         if companyValue <= floor:
             return Recommendation.SELL.value
