@@ -31,8 +31,8 @@ class BaseMethod:
         self.__market_capitalization, self.__amount_shares = \
             self.__companyValues.get_market_capitalization_and_amount_shares(company)
 
-        print(f"Initialized Calculation Method:\n  Company: {self.company}\n  Last Date: {self.last_date}"
-              f"\n  Risk Free Interest Rate: {self.risk_free_interest_rate}\n  Market Risk Premium: {self.market_risk_premium}")
+        print(f"Initialized Calculation Method:\n  Company: {self.__company}\n  Last Date: {self.__last_date}"
+              f"\n  Risk Free Interest Rate: {self.__risk_free_interest_rate}\n  Market Risk Premium: {self.__market_risk_premium}")
 
 
     @abstractmethod
