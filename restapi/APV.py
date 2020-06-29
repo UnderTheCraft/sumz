@@ -69,7 +69,10 @@ class APV(BaseMethod):
         print("GKu without residual value " + str(GKu))
 
         # Ewige Rente hinzufügen
-        GKu = GKu + (self.forecast_fcfs_year[-1]) / (equity_interest - self._marketValues.get_fcf_growth_rate() / 100)
+        perpetuity = (equity_interest - self._marketValues.get_fcf_growth_rate() / 100)
+        if perpetuity <= 0:
+            perpetuity = 1 / 100
+        GKu = GKu + (self.forecast_fcfs_year[-1]) / perpetuity
         print("GKu with residual value " + str(GKu))
 
         return GKu
