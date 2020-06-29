@@ -61,9 +61,12 @@ class EnterpriseValueCalculation(Resource):
         market_risk_premium = request.args.get('market_risk_premium')
         if market_risk_premium is not None:
             market_risk_premium = float(market_risk_premium)
+        fcf_growth_rate = request.args.get('fcf_growth_rate')
+        if fcf_growth_rate is not None:
+            fcf_growth_rate = float(fcf_growth_rate)
 
         enterprise_value_calculator = methods[method].\
-            getInstance()(company, last_date, risk_free_interest_rate, market_risk_premium)
+            getInstance()(company, last_date, risk_free_interest_rate, market_risk_premium, fcf_growth_rate)
 
         enterprise_value = enterprise_value_calculator.calculateEnterpriseValue()
         additional_information = enterprise_value_calculator.getAdditionalValues(enterprise_value, percentage_deviation=5)

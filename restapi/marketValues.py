@@ -20,7 +20,7 @@ class MarketValues:
     """ FCF Wachstumsrate:
     Prozentualer Wachstum des FCF im ewigen Rentenmodell
     """
-    __default_fcf_growth_rate = 5
+    __default_fcf_growth_rate = 1
 
     def __init__(self, risk_free_interest: float = __default__risk_free_interest,
                  market_risk_premium: float = __default__market_risk_premium,
