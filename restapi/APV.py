@@ -91,10 +91,15 @@ class APV(BaseMethod):
 
         Vs = 0
 
+        # Barwerte des zukünfitgen FK berechnen
         for i in range(len(forecast_liabilities - 1)):
             Vs = Vs + (tax_rate * liability_interest * liabilities[i]) / ((1 + liability_interest) ** (i + 1))
 
-        Vs = Vs + (tax_rate * liabilities[-1]) / ((1 + liability_interest) ** len(liabilities))
+        # "Ewiges Rentenmodell" für die FK berechnen
+        perpetuity = (liability_interest - self._marketValues.get_fcf_growth_rate() / 100)
+        if perpetuity <= 0:
+            perpetuity = 1 / 100
+        Vs = Vs + (tax_rate * liabilities[-1]) / perpetuity
 
         print("Tax Shield " + str(Vs))
 
