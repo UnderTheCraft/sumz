@@ -12,10 +12,10 @@ from restapi.recommendation import Recommendation
 class APV(BaseMethod):
 
     def __init__(self, company: str, last_date: date = None, risk_free_interest_rate: float = None,
-                 market_risk_premium: float = None):
+                 market_risk_premium: float = None, fcf_growth_rate: float = None):
         """ Die benötigten Parameter werden festgelegt """
         super().__init__(company=company, last_date=last_date, risk_free_interest_rate=risk_free_interest_rate,
-                         market_risk_premium=market_risk_premium)
+                         market_risk_premium=market_risk_premium, fcf_growth_rate=fcf_growth_rate)
         #TODO Instanzvariablen konsitent deklarieren
         self.last_date_debt = None
 
@@ -61,14 +61,15 @@ class APV(BaseMethod):
         equity_interest = self.calculateEquityInterest()
         print("Equityinterest " + str(equity_interest))
 
+        # Barwerte der zukünftigen Perioden berechnen
         for i in range(len(self.forecast_fcfs_year) - 1):
             presentValue = self.forecast_fcfs_year[i] / ((1 + equity_interest) ** (i + 1))
             GKu = GKu + presentValue
 
         print("GKu without residual value " + str(GKu))
 
-        GKu = GKu + (self.forecast_fcfs_year[-1]) / (equity_interest * ((1 + equity_interest) ** len(
-            self.forecast_fcfs_year)))
+        # Ewige Rente hinzufügen
+        GKu = GKu + (self.forecast_fcfs_year[-1]) / (equity_interest - self._marketValues.get_fcf_growth_rate())
         print("GKu with residual value " + str(GKu))
 
         return GKu
@@ -129,7 +130,7 @@ class APV(BaseMethod):
         return np.average(fk_fcf_ratios)
 
     def calculateEquityInterest(self):
-        """ Berechnung der Eigenkapitalverzinsung """
+        """ Berechnung der Eigenkapitalverzinsung (CAPM) """
 
         equity_interest = self._marketValues.get_risk_free_interest() + \
                           (self._marketValues.get_market_risk_premium() * \

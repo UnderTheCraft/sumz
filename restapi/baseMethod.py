@@ -7,7 +7,8 @@ from restapi.marketValues import MarketValues
 
 class BaseMethod:
 
-    def __init__(self, company:str, last_date: date = None, risk_free_interest_rate: float = None, market_risk_premium: float = None):
+    def __init__(self, company: str, last_date: date = None, risk_free_interest_rate: float = None,
+                 market_risk_premium: float = None, fcf_growth_rate: float = None):
 
         """ Die benötigten Parameter werden festgelegt """
 
@@ -26,6 +27,8 @@ class BaseMethod:
             self._marketValues.set_risk_free_interest(risk_free_interest_rate)
         if market_risk_premium is not None:
             self._marketValues.set_market_risk_premium(market_risk_premium)
+        if fcf_growth_rate is not None:
+            self._marketValues.set_fcf_growth_rate(fcf_growth_rate)
 
         self._market_capitalization, self._amount_shares = \
             self._companyValues.get_market_capitalization_and_amount_shares(company)
