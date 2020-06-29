@@ -96,10 +96,7 @@ class APV(BaseMethod):
             Vs = Vs + (tax_rate * liability_interest * liabilities[i]) / ((1 + liability_interest) ** (i + 1))
 
         # "Ewiges Rentenmodell" für die FK berechnen
-        perpetuity = (liability_interest - self._marketValues.get_fcf_growth_rate() / 100)
-        if perpetuity <= 0:
-            perpetuity = 1 / 100
-        Vs = Vs + (tax_rate * liabilities[-1]) / perpetuity
+        Vs = Vs + (tax_rate * liabilities[-1]) / ((1 + liability_interest) ** len(liabilities))
 
         print("Tax Shield " + str(Vs))
 
