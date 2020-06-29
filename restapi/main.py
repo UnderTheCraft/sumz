@@ -45,6 +45,7 @@ class MainClass(Resource):
 @application.param('last_date')
 @application.param('risk_free_interest_rate')
 @application.param('market_risk_premium')
+@application.param('fcf_growth_rate')
 class EnterpriseValueCalculation(Resource):
     def get(self, company: str, method: str):
 
