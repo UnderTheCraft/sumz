@@ -103,7 +103,7 @@ class APV(BaseMethod):
         return Vs
 
     def getDebt(self):
-        """ Gibt das für ein bestimmtes Datum angegebenene quartalsweise Fremdkapital eines Unternehmens zurück """
+        """ Gibt das letzte quartalsweise Fremdkapital eines Unternehmens zurück """
 
         quarterly_liabilities = self._companyValues.get_liabilities(self._company, quarterly=True, as_json=True)
 

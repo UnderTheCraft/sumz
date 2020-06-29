@@ -133,7 +133,8 @@ class CashFlowForecast(Resource):
 class DefaultExpertValues(Resource):
     def get(self):
         response = {"risk_free_interest": marketValues.get_risk_free_interest(),
-                    "market_risk_premium": marketValues.get_market_risk_premium()}
+                    "market_risk_premium": marketValues.get_market_risk_premium(),
+                    "fcf_growth_rate": marketValues.get_fcf_growth_rate()}
         return make_response(response, status.HTTP_200_OK)
 
 
