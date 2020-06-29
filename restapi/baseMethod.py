@@ -12,6 +12,8 @@ class BaseMethod:
         """ Die benötigten Parameter werden festgelegt """
 
         self._company = company
+        self._companyValues = CompanyValues()
+        self._marketValues = MarketValues()
 
         if last_date is None:
             self._last_date = datetime.today().date()
@@ -24,9 +26,6 @@ class BaseMethod:
             self._marketValues.set_risk_free_interest(risk_free_interest_rate)
         if market_risk_premium is not None:
             self._marketValues.set_market_risk_premium(market_risk_premium)
-
-        self._companyValues = CompanyValues()
-        self._marketValues = MarketValues()
 
         self._market_capitalization, self._amount_shares = \
             self._companyValues.get_market_capitalization_and_amount_shares(company)
