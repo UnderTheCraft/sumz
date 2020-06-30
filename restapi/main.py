@@ -30,7 +30,7 @@ marketValues = MarketValues()
 # TODO Metodenliste auslagern
 methods = {}
 methods.update(APVInformation().getMethodsElement())
-methods.update(FCFInformation().getMethodsElement())
+#methods.update(FCFInformation().getMethodsElement())
 
 print("API successfully started")
 
