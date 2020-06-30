@@ -35,3 +35,14 @@ Bewirkt, dass bei Verändern des Codes automatisch ein neuer Build gestartet wir
 
 **Weitere Infos:**
 Wenn bei lokalem Start *restapi* nicht gefunden wird, muss dies jeweils im import entfernt werden
+
+## Deployment bei Hoster:
+
+Das Backend sollte immer über das Internet erreichbar sein, weswegen ein Hoster gewählt wurde.
+Bisher wurde die Anwendung bei https://www.heroku.com/ deployed, da dort kostenloses Hosting verfügbar ist.
+
+Um das Repository auch zu deployen wird ein Account bei Heroku benötigt.
+Angemeldet muss eine neue App erstellt werden. 
+Das Repository kann der App als Ressource zur Verfügung gestellt werden.
+Das Deployment und Hosting wird anschließend automatisch durchgeführt.
+Die dabei erzeugte URL wird im Frontend benötigt, um auf die Daten zugreifen zu können.
