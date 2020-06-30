@@ -6,6 +6,9 @@ from restapi.marketValues import MarketValues
 
 
 class BaseMethod:
+    """ Oberklasse für die Unternehmensberechnung (Template):
+    Die einzelnen Methoden (APV, FCF, etc.) implementieren die BaseMethod Klasse.
+    """
 
     def __init__(self, company: str, last_date: date = None, risk_free_interest_rate: float = None,
                  market_risk_premium: float = None, fcf_growth_rate: float = None):
@@ -33,6 +36,7 @@ class BaseMethod:
         self._market_capitalization, self._amount_shares = \
             self._companyValues.get_market_capitalization_and_amount_shares(company)
 
+        # Logging
         print(f"Initialized Calculation Method:\n  Company: {self._company}\n  Last Date: {self._last_date}"
               f"\n  Risk Free Interest Rate: {self._marketValues.get_risk_free_interest()}"
               f"\n  Market Risk Premium: {self._marketValues.get_market_risk_premium()}"

@@ -10,13 +10,13 @@ from restapi.recommendation import Recommendation
 
 
 class APV(BaseMethod):
+    """ Implementiert das Adjusted-Present-Value Verfahren """
 
     def __init__(self, company: str, last_date: date = None, risk_free_interest_rate: float = None,
                  market_risk_premium: float = None, fcf_growth_rate: float = None):
-        """ Die benötigten Parameter werden festgelegt """
+        # Aufruf der init in der Oberklasse (BaseMethod)
         super().__init__(company=company, last_date=last_date, risk_free_interest_rate=risk_free_interest_rate,
                          market_risk_premium=market_risk_premium, fcf_growth_rate=fcf_growth_rate)
-        #TODO Instanzvariablen konsitent deklarieren
         self.last_date_debt = None
 
     def calculateEnterpriseValue(self):
@@ -78,6 +78,7 @@ class APV(BaseMethod):
         return GKu
 
     def calculatePresentValueOfTaxShield(self):
+        """ Berechnung des Wertes, welcher durch den Tax Shield generiert wird """
 
         fk_fcf_ratio = self.calculateFkFcfRatio()
         print("FK FCF Ratio: " + str(fk_fcf_ratio))
@@ -118,6 +119,9 @@ class APV(BaseMethod):
         return last_liability["liability"]
 
     def calculateFkFcfRatio(self):
+        """ Verhältnis zwischen FK und FCF:
+        Wird verwendet, um die Werte des zukünfitgen FK zu schätzen
+        """
 
         annual_liabilities = self._companyValues.get_liabilities(self._company, quarterly=False, as_json=True)
         annual_cash_flows = self._companyValues.get_annual_cash_flow(self._company)
@@ -135,7 +139,7 @@ class APV(BaseMethod):
         return np.average(fk_fcf_ratios)
 
     def calculateEquityInterest(self):
-        """ Berechnung der Eigenkapitalverzinsung (CAPM) """
+        """ Berechnung der Eigenkapitalverzinsung (CAPM Modell) """
 
         equity_interest = self._marketValues.get_risk_free_interest() + \
                           (self._marketValues.get_market_risk_premium() * \

@@ -2,6 +2,8 @@ from restapi.baseMethod import BaseMethod
 
 
 class BaseInformation:
+    """ Speichert Informationen zu bestimmten Verfahren zur Berechnung des Unternehmenswertes:
+    In der Implementierung wird eine Erzeugung einer Instanz zur Verfügung gestellt """
 
     def __init__(self, method_name: object, method_description: object, method_class: BaseMethod):
         self.__method_name__ = method_name
