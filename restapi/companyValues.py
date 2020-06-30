@@ -13,8 +13,6 @@ class CompanyValues:
         self.__companies = CompanyInfo()
         self.__abbreviationToNumber = {'K': 3, 'M': 6, 'B': 9, 'T': 12}
         self.session = HTMLSession()
-        self.stock_chart_interval = '1wk'
-        self.stock_chart_range = '5y'
 
     def get_cash_flows(self, company, as_json = False):
         """ Beziehen der quartalsweisen CashFlows von der yCharts Website mithilfe einer HTML Session"""
@@ -62,6 +60,9 @@ class CompanyValues:
 
     # get beta factor
     def get_beta_factor(self, company: str):
+        """ Beta Faktor:
+        Unternehmensspezifischer Faktor, welcher Aussage über die Volatilität der Aktie gibt
+        """
         try:
             response = self.session.get(f'https://finance.yahoo.com/quote/{company}')
             beta_factor = response.html.find("[data-test='BETA_5Y-value']", first=True).text
@@ -71,8 +72,10 @@ class CompanyValues:
             print(f"beta factor of company {company} not available within API!")
             traceback.print_exc()
 
-    # get Liablilities (Fremdkapital)
-    def get_liabilities(self, company:str, quarterly = False, as_json = False):
+    def get_liabilities(self, company: str, quarterly: bool = False, as_json: bool = False):
+        """ Fremdkapital:
+        Das FK des Unternehemen kann entweder jährlich oder quartalsweise zurückgegeben werden
+        """
         try:
             frequency = "quarterly" if quarterly else "annual"
 
@@ -95,8 +98,10 @@ class CompanyValues:
             print(f"liabilities of company {company} not available within API!")
             traceback.print_exc()
 
-    # Markkapitalisierung
     def get_market_capitalization(self, company: str):
+        """ Marktkapitalisierung:
+        Gibt Aussage über den Wert des Unternehmens anhand dessen Wert einer Aktie
+        """
         try:
             response = self.session.get(f'https://finance.yahoo.com/quote/{company}')
             market_cap = response.html.find('[data-test=MARKET_CAP-value]', first=True).text
@@ -113,6 +118,9 @@ class CompanyValues:
             traceback.print_exc()
 
     def get_amount_shares(self, company: str):
+        """ Anzahl an ausgegebenen Aktien:
+        Gibt die Anzahl an ausgegebenen Aktien für ein Unternehemen zurück
+        """
         try:
             response = self.session.get(f"https://finance.yahoo.com/quote/{company}")
 
@@ -127,6 +135,9 @@ class CompanyValues:
             traceback.print_exc()
 
     def get_market_capitalization_and_amount_shares(self, company: str):
+        """ Marktkapitalisierung und Anzahl Aktien:
+        Methode wurde aus Performance Gründen kombiniert, da beide von der gleichen Seite gezogen werden.
+        """
         try:
             print(f"get market capitalization and amount shares from {company}")
 
@@ -146,11 +157,15 @@ class CompanyValues:
             print(f"market capitalization of company {company} not available within API!")
             traceback.print_exc()
 
-    def get_stock_chart(self, company: str):
+    def get_stock_chart(self, company: str, interval: str = '1wk', range: str = '5y'):
+        """ Aktienverlauf:
+        Gibt den Aktienkurs eines Unternehmens zurück.
+        Standardmäßig werden wöchtenliche Werte der letzten 5 Jahre aggregiert.
+        """
         try:
             response = requests.get(f'https://query1.finance.yahoo.com/v8/finance/chart/{company}'
-                                   f'?region=US&interval={self.stock_chart_interval}'
-                                   f'&range={self.stock_chart_range}').json()
+                                   f'?region=US&interval={interval}'
+                                   f'&range={range}').json()
 
             timestamps = response["chart"]["result"][0]["timestamp"]
             indicators = response["chart"]["result"][0]["indicators"]
@@ -158,6 +173,9 @@ class CompanyValues:
 
             chart_values = [{"x": datetime.fromtimestamp(timestamp), "y": price}
                             for timestamp, price in zip(timestamps, closing_prices)]
+
+            # vorletzten eintrag entfernen, da ungültig (api checken?)
+            del chart_values[-2]
 
             return chart_values
 
