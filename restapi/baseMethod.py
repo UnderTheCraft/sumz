@@ -50,3 +50,7 @@ class BaseMethod:
     @abstractmethod
     def getAdditionalValues(self):
         pass
+
+    @abstractmethod
+    def calculateEquityInterest(self):
+        pass

@@ -97,7 +97,7 @@ class APV(BaseMethod):
             Vs = Vs + (tax_rate * liability_interest * liabilities[i]) / ((1 + liability_interest) ** (i + 1))
 
         # "Ewiges Rentenmodell" für die FK berechnen
-        Vs = Vs + (tax_rate * liabilities[-1]) / ((1 + liability_interest) ** len(liabilities))
+        Vs = Vs + (tax_rate * liabilities[-1]) / ((1 + liability_interest) ** len(liabilities-1))
 
         print("Tax Shield " + str(Vs))
 
