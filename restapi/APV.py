@@ -156,6 +156,8 @@ class APV(BaseMethod):
     def getAdditionalValues(self, companyValue: float, percentage_deviation: float):
         """ Zusätzliche Parameter, welche zur Angabe des Unternehmenswerte benötigt werden """
 
+        forecast_dates = [self.past_dates[-1] + relativedelta(months=+(3*(i+1))) for i in range(len(self.forecast_fcfs_quarterly))]
+
         additionalVaules = {"Number of values used for forecast": self.number_of_values_for_forecast,
                             "Number of values used for FK FCF Ratio": self.number_of_values_for_fk_fcf_ratio,
                             "Date of last used past value": self.last_date_forecast,
@@ -166,7 +168,8 @@ class APV(BaseMethod):
                             "Amount of Shares": self._amount_shares,
                             "Recommendation": self.getRecommendation(companyValue, percentage_deviation),
                             "FCF": {
-                                "Past": [{'date': date, 'FCF': fcf} for date, fcf in zip(self.past_dates, self.past_fcfs) ]
+                                "Past": [{'date': date, 'FCF': fcf} for date, fcf in zip(self.past_dates, self.past_fcfs) ],
+                                "Forecast":  [{'date': date, 'FCF': floor(fcf)} for date, fcf in zip(forecast_dates, self.forecast_fcfs_quarterly)]
                             }
                             }
 
