@@ -60,7 +60,7 @@ class TestValues:
         liability_interest = TestValues.risk_free_interest_rate / 100
         Vs = 0
         # Barwerte des zukünfitgen FK berechnen
-        for i in range(len(TestValues.yearly_future_liabilities - 1)):
+        for i in range(len(TestValues.yearly_future_liabilities) - 1):
             Vs = Vs + (tax_rate * liability_interest * TestValues.liabilities[i]) / ((1 + liability_interest) ** (i + 1))
         # "Ewiges Rentenmodell" für die FK berechnen
         Vs = Vs + (tax_rate * TestValues.liabilities[-1]) / ((1 + liability_interest) ** (len(TestValues.liabilities) - 1))
