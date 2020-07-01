@@ -167,7 +167,7 @@ class APV(BaseMethod):
                             "Recommendation": self.getRecommendation(companyValue, percentage_deviation),
                             "FCF": {
                                 "Past": [{'date': date, 'FCF': fcf} for date, fcf in zip(self.past_dates, self.past_fcfs) ],
-                                "Forecast":  [{'date': date, 'FCF': fcf} for date, fcf in zip(forecast_dates, self.forecast_fcfs_quarterly)]
+                                "Forecast":  [{'date': date, 'FCF': floor(fcf)} for date, fcf in zip(forecast_dates, self.forecast_fcfs_quarterly)]
                             }
                             }
 
