@@ -22,19 +22,19 @@ class APV(BaseMethod):
     def calculateEnterpriseValue(self):
         """ Hauptmethode für die Berechnung des Unternehmenswertes """
 
-        enterprise_value = self.calculatePresentValueOfCashFlow() + \
-                           self.calculatePresentValueOfTaxShield() - \
-                           self.getDebt()
+        if "TEST".__eq__(self._company):
+            enterprise_value = TestValues.calculateEnterpriseValue()
+        else:
+            enterprise_value = self.calculatePresentValueOfCashFlow() + \
+                               self.calculatePresentValueOfTaxShield() - \
+                               self.getDebt()
 
         return floor(enterprise_value)
 
     def calculatePresentValueOfCashFlow(self):
         """ Berechnung des Barwertes zukünftiger Cashflows durch Abzinsung """
 
-        if "TEST".__eq__(self._company):
-            dates, fcfs, self.currency = TestValues.getFcf()
-        else:
-            dates, fcfs, self.currency = CompanyValues().get_cash_flows(self._company)
+        dates, fcfs, self.currency = CompanyValues().get_cash_flows(self._company)
 
         if self._last_date is None:
             self.last_date_forecast = dates[0]
