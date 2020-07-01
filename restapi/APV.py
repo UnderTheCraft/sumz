@@ -35,7 +35,8 @@ class APV(BaseMethod):
 
         if self._last_date is None:
             self.last_date_forecast = dates[0]
-            past_fcfs = fcfs[0:20]
+            self.past_fcfs = fcfs[0:20]
+            self.past_dates = dates[0:20]
 
         else:
             for date in dates:
@@ -43,18 +44,20 @@ class APV(BaseMethod):
                     index = dates.index(date)
                     self.last_date_forecast = date
                     break
-            past_fcfs = fcfs[index:index + 20]
+            self.past_fcfs = fcfs[index:index + 20]
+            self.past_dates = dates[index:index + 20]
 
-        past_fcfs.reverse()
+        self.past_dates.reverse()
+        self.past_fcfs.reverse()
 
-        self.number_of_values_for_forecast = len(past_fcfs)
+        self.number_of_values_for_forecast = len(self.past_fcfs)
 
-        print("Past fcfs " + str(past_fcfs))
+        print("Past fcfs " + str(self.past_fcfs))
 
-        forecast_fcfs_quarterly = ARIMAForecast().make_forecast(past_fcfs, 20)
-        print("FCF quarterly forecast " + str(forecast_fcfs_quarterly))
+        self.forecast_fcfs_quarterly = ARIMAForecast().make_forecast(self.past_fcfs, 20)
+        print("FCF quarterly forecast " + str(self.forecast_fcfs_quarterly))
 
-        self.forecast_fcfs_year = np.sum(np.array_split(forecast_fcfs_quarterly, 5), axis=1)
+        self.forecast_fcfs_year = np.sum(np.array_split(self.forecast_fcfs_quarterly, 5), axis=1)
         print("FCF year forecast " + str(self.forecast_fcfs_year))
 
         GKu = 0
@@ -158,7 +161,11 @@ class APV(BaseMethod):
                             "Currency": self.currency,
                             "Market Capitalization": self._market_capitalization,
                             "Amount of Shares": self._amount_shares,
-                            "Recommendation": self.getRecommendation(companyValue, percentage_deviation)
+                            "Recommendation": self.getRecommendation(companyValue, percentage_deviation),
+                            "FCF": {
+                                "Past": [{'date': date, 'FCF': fcf} for date, fcf in zip(self.past_dates, self.past_fcf)],
+                                "Forecast":self.forecast_fcfs_quarterly
+                            }
                             }
 
         return additionalVaules
