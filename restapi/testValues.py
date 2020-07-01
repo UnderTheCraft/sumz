@@ -57,7 +57,7 @@ class TestValues:
     @staticmethod
     def calculatePresentValueOfTaxShield():
         tax_rate = TestValues.tax_rate / 100
-        liability_interest = TestValues.risk_free_interest / 100
+        liability_interest = TestValues.risk_free_interest_rate / 100
         Vs = 0
         # Barwerte des zukünfitgen FK berechnen
         for i in range(len(TestValues.yearly_future_liabilities - 1)):
