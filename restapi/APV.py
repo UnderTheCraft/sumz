@@ -154,7 +154,7 @@ class APV(BaseMethod):
     def getAdditionalValues(self, companyValue: float, percentage_deviation: float):
         """ Zusätzliche Parameter, welche zur Angabe des Unternehmenswerte benötigt werden """
 
-        forecast_dates = [ self.past_dates[-1] + relativedelta(months=+(3*i)) for i in range(len(self.forecast_fcfs_quarterly))]
+        forecast_dates = [self.past_dates[-1] + relativedelta(months=+(3*(i+1))) for i in range(len(self.forecast_fcfs_quarterly))]
 
         additionalVaules = {"Number of values used for forecast": self.number_of_values_for_forecast,
                             "Number of values used for FK FCF Ratio": self.number_of_values_for_fk_fcf_ratio,
