@@ -6,10 +6,16 @@ class TestValues:
     market_risk_premium = 7.5
     fcf_growth_rate = 0
     beta_factor = 1
+    tax_rate = 26
+    currency = "USD"
 
     dates = [datetime(2019, 12, 31), datetime(2019, 9, 30)]
     yearly_future_fcfs = [1000, 1200]
-    currency = "USD"
+
+    current_liability = 400
+    yearly_future_liabilities = [500, 600]
+    liabilities = [current_liability, *yearly_future_liabilities]
+    last_quarterly_liability = 450
 
     @staticmethod
     def getFcf():
@@ -27,6 +33,7 @@ class TestValues:
         enterprise_value = TestValues.calculatePresentValueOfCashFlow() + \
                            TestValues.calculatePresentValueOfTaxShield() - \
                            TestValues.getDebt()
+        return enterprise_value
 
     @staticmethod
     def calculatePresentValueOfCashFlow():
@@ -49,11 +56,20 @@ class TestValues:
 
     @staticmethod
     def calculatePresentValueOfTaxShield():
-        pass
+        tax_rate = TestValues.tax_rate / 100
+        liability_interest = TestValues.risk_free_interest / 100
+        Vs = 0
+        # Barwerte des zukünfitgen FK berechnen
+        for i in range(len(TestValues.yearly_future_liabilities - 1)):
+            Vs = Vs + (tax_rate * liability_interest * TestValues.liabilities[i]) / ((1 + liability_interest) ** (i + 1))
+        # "Ewiges Rentenmodell" für die FK berechnen
+        Vs = Vs + (tax_rate * TestValues.liabilities[-1]) / ((1 + liability_interest) ** (len(TestValues.liabilities) - 1))
+        print("Tax Shield " + str(Vs))
+        return Vs
 
     @staticmethod
     def getDebt():
-        pass
+        return TestValues.last_quarterly_liability
 
     @staticmethod
     def calculateEquityInterest(self):

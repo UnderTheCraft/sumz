@@ -55,9 +55,16 @@ class EnterpriseValueCalculation(Resource):
         print(f"Using Company {company} and method {method}")
 
         if "TEST".__eq__(company):
+            """ ONLY FOR TESTING ! """
             print("TEST MODE STARTED!")
             last_date, risk_free_interest_rate, market_risk_premium, fcf_growth_rate = TestValues.getInitialValues()
+            enterprise_value_calculator = methods[method]. \
+                getInstance()(company, last_date, risk_free_interest_rate, market_risk_premium, fcf_growth_rate)
+            enterprise_value = enterprise_value_calculator.calculateEnterpriseValue()
+            response = {"Enterprise Value": enterprise_value}
+            return make_response(response, status.HTTP_200_OK)
         else:
+            """ USED FOR THE REAL COMPANY EVALUATION ! """
             last_date = request.args.get('last_date')
             if last_date is not None:
                 last_date = datetime.strptime(last_date, "%d.%m.%Y").date()
