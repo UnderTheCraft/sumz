@@ -6,7 +6,7 @@ class TestValues:
     market_risk_premium = 7.5
     fcf_growth_rate = 0
 
-    dates = [datetime(2019, 12, 31), datetime(2019, 9, 31)]
+    dates = [datetime(2019, 12, 31), datetime(2019, 9, 30)]
     fcf = [1000, 1200]
     currency = "USD"
 
