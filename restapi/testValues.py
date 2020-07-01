@@ -72,7 +72,7 @@ class TestValues:
         return TestValues.last_quarterly_liability
 
     @staticmethod
-    def calculateEquityInterest(self):
+    def calculateEquityInterest():
         equity_interest = TestValues.risk_free_interest_rate + \
                           (TestValues.market_risk_premium * \
                            TestValues.beta_factor)
