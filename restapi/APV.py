@@ -163,7 +163,7 @@ class APV(BaseMethod):
                             "Amount of Shares": self._amount_shares,
                             "Recommendation": self.getRecommendation(companyValue, percentage_deviation),
                             "FCF": {
-                                "Past": [{'date': date, 'FCF': fcf} for date, fcf in zip(self.past_dates, self.past_fcf)],
+                                "Past": [{'date': date, 'FCF': fcf} for date, fcf in zip(self.past_dates, self.past_fcfs)],
                                 "Forecast":self.forecast_fcfs_quarterly
                             }
                             }
