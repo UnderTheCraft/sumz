@@ -19,6 +19,11 @@ class BaseMethod:
         self._companyValues = CompanyValues()
         self._marketValues = MarketValues()
 
+        """ ONLY FOR TESTING """
+        if not "TEST".__eq__(self._company):
+            self._market_capitalization, self._amount_shares = \
+                self._companyValues.get_market_capitalization_and_amount_shares(company)
+
         if last_date is None:
             self._last_date = datetime.today().date()
         else:
@@ -33,15 +38,11 @@ class BaseMethod:
         if fcf_growth_rate is not None:
             self._marketValues.set_fcf_growth_rate(fcf_growth_rate)
 
-        self._market_capitalization, self._amount_shares = \
-            self._companyValues.get_market_capitalization_and_amount_shares(company)
-
         # Logging
         print(f"Initialized Calculation Method:\n  Company: {self._company}\n  Last Date: {self._last_date}"
               f"\n  Risk Free Interest Rate: {self._marketValues.get_risk_free_interest()}"
               f"\n  Market Risk Premium: {self._marketValues.get_market_risk_premium()}"
               f"\n  FCF Growth Rate: {self._marketValues.get_fcf_growth_rate()}")
-
 
     @abstractmethod
     def calculateEnterpriseValue(self):
