@@ -6,11 +6,11 @@ from flask_api import status
 from flask_restx import Api, Resource
 from flask_compress import Compress
 from restapi.APVInformation import APVInformation
-from restapi.FCFInformation import FCFInformation
 from restapi.arimaForecast import ARIMAForecast
 from restapi.companyInfo import CompanyInfo
 from restapi.companyValues import CompanyValues
 from restapi.marketValues import MarketValues
+from restapi.testValues import TestValues
 
 """ Erzeugen der Flask Application: """
 
@@ -54,18 +54,22 @@ class EnterpriseValueCalculation(Resource):
         print("EnterpriseValueCalculation Started!")
         print(f"Using Company {company} and method {method}")
 
-        last_date = request.args.get('last_date')
-        if last_date is not None:
-            last_date = datetime.strptime(last_date, "%d.%m.%Y").date()
-        risk_free_interest_rate = request.args.get('risk_free_interest_rate')
-        if risk_free_interest_rate is not None:
-            risk_free_interest_rate = float(risk_free_interest_rate)
-        market_risk_premium = request.args.get('market_risk_premium')
-        if market_risk_premium is not None:
-            market_risk_premium = float(market_risk_premium)
-        fcf_growth_rate = request.args.get('fcf_growth_rate')
-        if fcf_growth_rate is not None:
-            fcf_growth_rate = float(fcf_growth_rate)
+        if "TEST".__eq__(company):
+            print("TEST MODE STARTED!")
+            last_date, risk_free_interest_rate, market_risk_premium, fcf_growth_rate = TestValues.getInitialValues()
+        else:
+            last_date = request.args.get('last_date')
+            if last_date is not None:
+                last_date = datetime.strptime(last_date, "%d.%m.%Y").date()
+            risk_free_interest_rate = request.args.get('risk_free_interest_rate')
+            if risk_free_interest_rate is not None:
+                risk_free_interest_rate = float(risk_free_interest_rate)
+            market_risk_premium = request.args.get('market_risk_premium')
+            if market_risk_premium is not None:
+                market_risk_premium = float(market_risk_premium)
+            fcf_growth_rate = request.args.get('fcf_growth_rate')
+            if fcf_growth_rate is not None:
+                fcf_growth_rate = float(fcf_growth_rate)
 
         enterprise_value_calculator = methods[method].\
             getInstance()(company, last_date, risk_free_interest_rate, market_risk_premium, fcf_growth_rate)

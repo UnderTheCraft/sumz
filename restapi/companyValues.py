@@ -6,16 +6,21 @@ from dateutil import parser
 from datetime import datetime
 from math import floor
 import time
+from restapi.testValues import TestValues
 
 class CompanyValues:
 
     def __init__(self):
         self.__companies = CompanyInfo()
+        self.__test_values = TestValues()
         self.__abbreviationToNumber = {'K': 3, 'M': 6, 'B': 9, 'T': 12}
         self.session = HTMLSession()
 
     def get_cash_flows(self, company, as_json = False):
         """ Beziehen der quartalsweisen CashFlows von der yCharts Website mithilfe einer HTML Session"""
+        if "TEST".__eq__(company):
+            return getFcf()
+
         try:
 
             # TODO hier könnte ne tryExcept hin, falls z.b. keine Verbindung aufgebaut werden kann

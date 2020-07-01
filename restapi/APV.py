@@ -1,7 +1,7 @@
 from restapi.baseMethod import BaseMethod
 from restapi.arimaForecast import ARIMAForecast
 from restapi.companyValues import CompanyValues
-from restapi.marketValues import MarketValues
+from restapi.testValues import TestValues
 from datetime import date
 import numpy as np
 from math import floor
@@ -31,7 +31,10 @@ class APV(BaseMethod):
     def calculatePresentValueOfCashFlow(self):
         """ Berechnung des Barwertes zukünftiger Cashflows durch Abzinsung """
 
-        dates, fcfs, self.currency = CompanyValues().get_cash_flows(self._company)
+        if "TEST".__eq__(self._company):
+            dates, fcfs, self.currency = TestValues.getFcf()
+        else:
+            dates, fcfs, self.currency = CompanyValues().get_cash_flows(self._company)
 
         if self._last_date is None:
             self.last_date_forecast = dates[0]
