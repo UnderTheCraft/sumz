@@ -69,7 +69,7 @@ class APV(BaseMethod):
         print("Equityinterest " + str(equity_interest))
 
         # Barwerte der zukünftigen Perioden berechnen
-        for i in range(len(self.forecast_fcfs_year) - 1):
+        for i in range(len(self.forecast_fcfs_year)):
             presentValue = self.forecast_fcfs_year[i] / ((1 + equity_interest) ** (i + 1))
             GKu = GKu + presentValue
 
@@ -100,7 +100,7 @@ class APV(BaseMethod):
         Vs = 0
 
         # Barwerte des zukünfitgen FK berechnen
-        for i in range(len(forecast_liabilities) - 1):
+        for i in range(len(forecast_liabilities)):
             Vs = Vs + (tax_rate * liability_interest * liabilities[i]) / ((1 + liability_interest) ** (i + 1))
 
         # "Ewiges Rentenmodell" für die FK berechnen
