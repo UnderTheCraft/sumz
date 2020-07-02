@@ -2,20 +2,20 @@ from datetime import datetime
 
 class TestValues:
     last_date = datetime(2019, 12, 31)
-    risk_free_interest_rate = 1.5
+    risk_free_interest_rate = 0
     market_risk_premium = 7.5
     fcf_growth_rate = 0
-    beta_factor = 1
-    tax_rate = 26
+    beta_factor = 1.07
+    tax_rate = 26.325
     currency = "USD"
 
-    dates = [datetime(2019, 12, 31), datetime(2019, 9, 30)]
-    yearly_future_fcfs = [1000, 1200]
+    # dates = [datetime(2019, 12, 31), datetime(2019, 9, 30)]
+    yearly_future_fcfs = [138.61, 202.31, 174.41, 202.52]
 
-    current_liability = 400
-    yearly_future_liabilities = [500, 600]
+    current_liability = 1260
+    yearly_future_liabilities = [1320, 1330, 1400, 1400]
     liabilities = [current_liability, *yearly_future_liabilities]
-    last_quarterly_liability = 450
+    last_quarterly_liability = 1260
 
     @staticmethod
     def getFcf():
@@ -37,7 +37,7 @@ class TestValues:
 
     @staticmethod
     def calculatePresentValueOfCashFlow():
-
+        """ Abzinsung Cash Flows"""
         GKu = 0
         equity_interest = TestValues.calculateEquityInterest()
         print("Equity Interest: " + str(equity_interest))
@@ -73,7 +73,12 @@ class TestValues:
 
     @staticmethod
     def calculateEquityInterest():
+        """ CAPM """
+        """
         equity_interest = TestValues.risk_free_interest_rate + \
                           (TestValues.market_risk_premium * \
                            TestValues.beta_factor)
         return equity_interest / 100
+        """
+
+        return 9.969137 / 100
