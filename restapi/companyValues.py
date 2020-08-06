@@ -31,7 +31,9 @@ class CompanyValues:
             # TODO Zweite spalte mit cashflows sollte auch noch berücksichtigt werden
             raw_dates = response.html.find(".histDataTable", first=True).find(".col1")[1:]
             raw_fcfs = response.html.find(".histDataTable", first=True).find(".col2")[1:]
-            currency = response.html.find("#securityQuote", first=True).find(".info")[1].text
+
+            # OLD: currency = response.html.find("#securityQuote", first=True).find(".info")[1].text
+            currency = response.html.find("#securityQuote", first=True).find(".info")[0].text
 
             dates = [parser.parse(rawDate.text).date() for rawDate in raw_dates]
             fcfs = [int(float(rawFCF.text[:-1]) * 10 ** self.__abbreviationToNumber[rawFCF.text[-1]]) for rawFCF in raw_fcfs]
